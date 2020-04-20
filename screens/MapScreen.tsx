@@ -58,7 +58,6 @@ import {
 
   const locations: { icon: string; position: LatLng; name: string }[] = [
     {
-      
       icon: `<img style='transform: scale(${scale}) rotate(45deg)' src='http://yatseyko.com/wp-content/uploads/2018/07/Vue.js_Logo.svg' />`,
       // icon: 
       // `<div>
@@ -73,11 +72,13 @@ import {
       // <use xlink:href="#b1OuTbAhqc" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="14" stroke-opacity="1">
       // </use>
 
+
+
+
       
       // </svg>
       // <b style="position: absolute; top: 35px; right: -6vw">Polska</b>
       // </div>`,
-      // icon: `<div>${icon}<b>Test</b></div>`,
       // icon: `<div><img src='../assets/ship.png' /><b>Test</b></div>`,
       position: { lat:50.841140, lng: 23.026591 },
       name: "Polska"
