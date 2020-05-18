@@ -10,6 +10,10 @@ import {
 
 import Globals from '../component-library/Globals';
 
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+
+import { ShipScreen } from './ShipScreen'
+import { ScheduleScreen } from './ScheduleScreen'
 
 
 
@@ -178,7 +182,7 @@ const list = [
     },
 ]
 
-export const ListScreen = () => {
+export const ListScreen = ({navigation}) => {
     const [ search, setSearch ] = useState([])
     const [ filteredList, setFilteredList ] = useState([])
     const [ list, setList ] = useState([])
@@ -201,6 +205,12 @@ export const ListScreen = () => {
                 />
             </View>
         <ScrollView style={styles.scrollSpace}>
+            <Text>List Screen</Text>
+            <TouchableWithoutFeedback
+                onPress={() => {navigation.navigate('Ship')}}
+            >
+                <Text>Hamburg, Germany</Text>
+            </TouchableWithoutFeedback>
             {
                 list.map(schedule => {
                     return (
