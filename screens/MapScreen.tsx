@@ -9,8 +9,18 @@ import {
     RefreshControl,
     ActivityIndicator,
     Button,
-    Settings
+    Settings,
+    Dimensions
 } from 'react-native';
+// import {
+//     INFINITE_ANIMATION_ITERATIONS,
+//     LatLng,
+//     WebViewLeaflet,
+//     WebViewLeafletEvents,
+//     WebviewLeafletMessage,
+//     AnimationType,
+//     MapShapeType
+//   } from "react-native-webview-leaflet";
 import {
     INFINITE_ANIMATION_ITERATIONS,
     LatLng,
@@ -19,7 +29,7 @@ import {
     WebviewLeafletMessage,
     AnimationType,
     MapShapeType
-  } from "react-native-webview-leaflet";
+  } from "../services/utility/react-native-webview-leaflet/index";
 
   import Svg, {
     Use,
@@ -195,6 +205,7 @@ export const MapScreen = ({navigation}) => {
               <View style={styles.refresh}>
                 <Icon name='refresh' style={styles.refreshIcon} />
               </View>
+              {/* <View style={{height: 37, backgroundColor: '#fff', width: '100%', top: 0, zIndex: 9999,}}/> */}
               <View style={styles.header}>
                   <TextInput 
                     style={styles.headerInput}
@@ -212,13 +223,15 @@ export const MapScreen = ({navigation}) => {
                     </View>
                   </TouchableWithoutFeedback>
               </View>
-              {
+           
+              {/* { */}
             <WebViewLeaflet
               // ref={(ref: WebViewLeaflet) => {
               //   setWebViewLeafletRef(ref);
               // }}
-              zoomControl={false}
-              backgroundColor={"blue"}
+              // zoomControl={false}
+              // backgroundColor={"blue"}
+
               onMessageReceived={onMessageReceived}
               mapLayers={[
                 {
@@ -240,8 +253,7 @@ export const MapScreen = ({navigation}) => {
                 ]}
               mapCenterPosition={mapCenterPosition}
               zoom={4}
-              />
-            }
+            />  
         </View>
       )
   }

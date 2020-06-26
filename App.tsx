@@ -103,7 +103,7 @@ export default function App() {
     }}> */}
       <NavigationContainer>           
         <View style={styles.container}>
-        <Stack.Navigator initialRouteName="Auth">
+        <Stack.Navigator initialRouteName="Bottom">
           <Stack.Screen
             name="Auth" 
             component={AuthScreen}
