@@ -42,10 +42,6 @@ import {
 
   // import BackendApiClient from '../services/api/BackendApiClient';
 
-  // interface Props {
-  //   navigation: NavigationStackProp;
-  // }
-
   type LatLngObject = { lat: number; lng: number };
   
   // Basic Logic: get IDs from api/ships and context (don't forget about second page)
@@ -151,7 +147,7 @@ export const MapScreen = ({navigation}) => {
       });
       const [search, setSearch ] = useState([])
       const [ownPosition, setOwnPosition] = useState(null);
-    const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
+      const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
 
 
 
@@ -193,36 +189,28 @@ export const MapScreen = ({navigation}) => {
       const { loading, error, request } = useHttp()
       
       const getMapData = async () => {
-        console.log(Config.apiUrl)
-        const token = AsyncStorage.getItem('token')
+        const token = await AsyncStorage.getItem('Token')
+        // console.log('Url', Config.apiUrl)
         try {
-          // const fetched = await request('https://api.app.fleettracker.de/api/ships', 'GET', null, {
-          //   Authorization: `Bearer ${token}`
-          // })
+          console.log('token', token)
+          const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
+            Authorization: `Bearer ${token}`
+          })
+          console.log(fetched)
 
-          const f = await axios.get('https://api.app.fleettracker.de/api/ships/',
-            {
-              Authorization: `Bearer ${token}`
-            }
-          )
-          // console.log(f)
-
-          // const userId = await axios.get(`${Config.API_BASE_URL_DEV}auth/signup_app/`,
-          // { 'phone': `${phone}` },
-          // {
-          //     headers: { 'Content-Type': 'application/json' },
-          // })
-
-          // console.log('Ids', fetched)
-          console.log('test')
         } catch(e) {
           console.log(e)
         }
       }
 
       useEffect(() => {
-        const token = AsyncStorage.getItem('Token')
-        console.log(token)
+        // const token = AsyncStorage.getItem('Token')
+        // console.log('Token', token)
+        // token.then(
+        //   result => {
+        //     // первая функция-обработчик - запустится при вызове resolve
+        //     alert("Fulfilled: " + result); // result - аргумент resolve
+        // })
         // console.log(authReducer)
         // console.log(BackendApiClient.getApiBaseUrl())
         getMapData()
@@ -230,14 +218,6 @@ export const MapScreen = ({navigation}) => {
 
       return (
           <View style={{ height: '100%' }}>
-              {/* <TouchableWithoutFeedback
-                // style={{zIndex: 99999, width: 200, height: 100, backgroundColor: 'red'}}
-                style={styles.refresh}
-                onPress={() => {
-                    getMapData()
-                  }
-                }
-              > */}
               <TouchableHighlight
                 style={styles.refresh}
                 onPress={() => {
@@ -245,31 +225,23 @@ export const MapScreen = ({navigation}) => {
                   }
                 }
               >
-                {/* <View style={styles.refresh}> */}
                   <Icon name='refresh' style={styles.refreshIcon} />
-                {/* </View> */}
               </TouchableHighlight>
-              {/* </TouchableWithoutFeedback> */}
-              {/* <View style={{height: 37, backgroundColor: '#fff', width: '100%', top: 0, zIndex: 9999,}}/> */}
               <View style={styles.header}>
                   <TextInput 
                     style={styles.headerInput}
                     textContentType="name"
                     placeholder="Search Vessel or Ship Group..." 
                     onChange={ onFilterList }
-                    // value={ search }
                   />
                   <TouchableWithoutFeedback
                     onPress={() => {navigation.navigate('List')}}
-                    // onPress={() => navigation.navigate('ListScreen')}
                   >
                     <View style={styles.headerButtonWrapper}>
                       <Icon name='bars' style={styles.headerButton} />
                     </View>
                   </TouchableWithoutFeedback>
               </View>
-           
-              {/* { */}
             <WebViewLeaflet
               // ref={(ref: WebViewLeaflet) => {
               //   setWebViewLeafletRef(ref);
@@ -277,12 +249,9 @@ export const MapScreen = ({navigation}) => {
               onMessageReceived={onMessageReceived}
               mapLayers={[
                 {
-                  baseLayerName: "Mapbox",
+                  baseLayerName: "HereTileLayer",
                   url: hereTileUrl,
-                  // attribution:
-                  //   // "&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                  //   "Flettrracker"
-                  },
+                },
               ]}
               mapMarkers={[
                   ...locations.map(location => {
@@ -349,7 +318,6 @@ export const MapScreen = ({navigation}) => {
     refresh: {
       position: 'absolute',
       zIndex: 999,
-      color: 'white', 
       backgroundColor: Globals.color.main,
       bottom: 28,
       right: 8,
