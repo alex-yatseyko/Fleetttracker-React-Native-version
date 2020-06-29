@@ -12,8 +12,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import { useAuth } from './services/auth/auth.hook'
-import { AuthContext } from './context/AuthContext'
+// import { useAuth } from './services/auth/auth.hook'
+// import { AuthContext } from './context/AuthContext'
 
 import { BottomTab } from './navigation/BottomTab'
 
@@ -29,58 +29,21 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { rootReducer } from './redux/rootReducer'
 
-const store = createStore(rootReducer)
+console.disableYellowBox = true;
 
+const store = createStore(rootReducer)
 const Stack = createStackNavigator();
 
-// const HomeScreen = ({navigation}) => {
-//   const test = 1
-//   return(
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Text>Home Screen</Text>
-//       <Button
-//         title="Go to Details"
-//         onPress={() => navigation.navigate('Details', {
-//           params: { user: 'jane' },
-//           name: `'Custom profile header' ${test}`
-//         })}
-//       />
-//       <Button
-//         title="Go to Auth"
-//         onPress={() => navigation.navigate('Auth', {
-//           params: { user: 'jane' },
-//         })}
-//       />
-//     </View>
-//   )
-// }
-
-// function DetailsScreen({navigation, route}) {
-//   return (
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Text>Details Screen</Text>
-//       {/* <Text>{route.params.user}</Text> */}
-//       <Button
-//         title="Go to Home"
-//         onPress={() => navigation.navigate('Home', {
-//           params: { user: 'jane' },
-//           screen: 'Auth',
-//         })}
-//       />
-//       <Button title="Go back" onPress={() => navigation.goBack()} />
-//     </View>
-//   );
-// }
-
 export default function App() {
-  const {
-    token, 
-    refresh_token, 
-    login, 
-    logout, 
-    // ready 
-  } = useAuth()
-  const isAuthenticated = !!token  
+  // const {
+  //   token, 
+  //   refresh_token, 
+  //   login, 
+  //   logout, 
+  //   // ready 
+  // } = useAuth()
+  // const isAuthenticated = !!token  
+
   // const isAuthenticated = false;
   // const routes = useRoutes(isAuthenticated)
 
@@ -103,7 +66,7 @@ export default function App() {
     }}> */}
       <NavigationContainer>           
         <View style={styles.container}>
-        <Stack.Navigator initialRouteName="Bottom">
+        <Stack.Navigator initialRouteName="Auth">
           <Stack.Screen
             name="Auth" 
             component={AuthScreen}

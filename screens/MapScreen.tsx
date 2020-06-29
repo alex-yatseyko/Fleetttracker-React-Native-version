@@ -1,26 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     StyleSheet,
     View,
     Text,
     TextInput,
     Alert,
-    SectionList,
-    RefreshControl,
-    ActivityIndicator,
-    Button,
-    Settings,
-    Dimensions
 } from 'react-native';
-// import {
-//     INFINITE_ANIMATION_ITERATIONS,
-//     LatLng,
-//     WebViewLeaflet,
-//     WebViewLeafletEvents,
-//     WebviewLeafletMessage,
-//     AnimationType,
-//     MapShapeType
-//   } from "react-native-webview-leaflet";
 import {
     INFINITE_ANIMATION_ITERATIONS,
     LatLng,
@@ -50,6 +35,11 @@ import {
 
   import Globals from '../component-library/Globals';
 
+  // import { rootReducer } from '../redux/rootReducer'
+  import { authReducer } from '../redux/authReducer'
+
+  // import BackendApiClient from '../services/api/BackendApiClient';
+
   interface Props {
     navigation: NavigationStackProp;
   }
@@ -63,12 +53,7 @@ import {
 
 
   const icon = `<svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="40" height="40"><defs><path d="M320.8 7.2L501.6 640L140 640L320.8 7.2Z" id="b1OuTbAhqc"></path></defs><g><g><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill="#fefe02" fill-opacity="1"></use><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="14" stroke-opacity="1"></use></g></g></g></g></svg>`
-
   const scale = .6;
-
-  // const test = () => {
-  //   alert(scale)
-  // }
 
   const locations: { icon: string; position: LatLng; name: string }[] = [
     {
@@ -97,6 +82,7 @@ import {
 const getDuration = (): number => Math.floor(Math.random() * 3) + 1;
 const getDelay = (): number => Math.floor(Math.random()) * 0.5;
 const iterationCount = "infinite";
+
 
 export const MapScreen = ({navigation}) => {
   return(
@@ -163,7 +149,7 @@ export const MapScreen = ({navigation}) => {
         lat: 40.153238,
         lng: 12.986282
       });
-      const [ search, setSearch ] = useState([])
+      const [search, setSearch ] = useState([])
       const [ownPosition, setOwnPosition] = useState(null);
     const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
 
@@ -182,7 +168,7 @@ export const MapScreen = ({navigation}) => {
         //     Alert.alert(`Map Touched at:`, `${position.lat}, ${position.lng}`);
         //     break;
           default:
-            console.log("App received", message);
+            // console.log("App received", message);
         }
       };
 
@@ -199,6 +185,13 @@ export const MapScreen = ({navigation}) => {
         'reduced.night'
       ]
       const hereTileUrl = `https://1.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${themes[0]}/{z}/{x}/{y}/256/png8?apiKey=${ hereCredentials.apiKey }&app_id=${ hereCredentials.appId }`
+
+      // const onIncrement={() => store.dispatch({ type: 'INCREMENT' })}
+
+      useEffect(() => {
+        // console.log(authReducer)
+        // console.log(BackendApiClient.getApiBaseUrl())
+      }, [])
 
       return (
           <View style={{ height: '100%' }}>

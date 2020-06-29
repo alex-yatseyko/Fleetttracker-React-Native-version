@@ -1,5 +1,11 @@
-const API_BASE_URL = {
-    development: 'https://api.dev.youpendo.com/api/v1',
-    internal: 'https://api.staging.youpendo.com/api/v1',
-    production: 'https://api.youpendo.com/api/v1',
-  };
+// import { API_BASE_URL_DEV, API_KEY } from 'react-native-dotenv';
+
+import { apiUrl } from 'react-native-dotenv';
+
+class BackendApiClient {
+    private getApiBaseUrl(): string {
+        return apiUrl;
+    }
+}
+
+export default new BackendApiClient();

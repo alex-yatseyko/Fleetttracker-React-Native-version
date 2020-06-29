@@ -3,6 +3,7 @@ import { StyleSheet, Text } from 'react-native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 /* Screens */
 import { MapScreen } from '../screens/MapScreen'
@@ -14,7 +15,17 @@ export const BottomTab = ({navigation}) => {
 
     return (
         <Tab.Navigator 
-          barStyle={{ backgroundColor: '#fff', height: 70, zIndex: 999 }}
+          barStyle={{ 
+            backgroundColor: '#fff', 
+            height: 70, 
+            zIndex: 999, 
+            ...ifIphoneX({
+                height: 100,
+                paddingTop: 10,
+            }, {
+                height: 70
+            }) 
+          }}
           initialRouteName="Map"
         >  
           <Tab.Screen 
