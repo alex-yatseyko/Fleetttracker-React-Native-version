@@ -34,8 +34,6 @@ export const AuthScreen = ({navigation}) => {
 
     const changeLogin = (e) => {
         setLogin(e.nativeEvent.text)
-        console.log(login)
-        console.log(pass)
     }
     const changePass = (e) => {
         setPass(e.nativeEvent.text)
@@ -50,9 +48,9 @@ export const AuthScreen = ({navigation}) => {
             AsyncStorage.setItem('Token', data.token)
             AsyncStorage.setItem('Name', login)
             AsyncStorage.setItem('Password', pass)
-            // navigation.navigate('Bottom')
+            navigation.navigate('Bottom')
         } catch (e) {
-            console.log('Name or Password is incorrect')
+            alert('Name or Password is incorrect')
             // console.log( 'Authentification:', e ? e : true )
         }
     }

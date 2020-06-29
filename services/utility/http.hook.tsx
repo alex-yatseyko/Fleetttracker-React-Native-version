@@ -29,7 +29,5 @@ export const useHttp = () => {
         }
     }, [])
 
-    // const clearError = () => setError(null)
-
     return { loading, request, error }
 }

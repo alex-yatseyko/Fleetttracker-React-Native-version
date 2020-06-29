@@ -3,7 +3,8 @@ import {
     StyleSheet,
     View,
     Text,
-    Image 
+    Image ,
+    AsyncStorage,
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
@@ -44,7 +45,12 @@ export const SettingsScreen = ({navigation}) => {
             </View> */}
             <Image style={styles.logo} source={require('../assets/logo.png')} />
             <TouchableWithoutFeedback
-                 onPress={() => console.log('Logout')}
+                 onPress={() => {
+                     console.log('Logout')
+                     AsyncStorage.removeItem('Token');
+                     AsyncStorage.removeItem('Name');
+                     AsyncStorage.removeItem('Password');
+                }}
             >
                 <View style={styles.button}>
                     <Text style={styles.buttonText}>

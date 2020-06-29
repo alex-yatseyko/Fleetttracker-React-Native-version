@@ -5,6 +5,8 @@ import {
     Text,
     TextInput,
     Alert,
+    AsyncStorage,
+    TouchableHighlight,
 } from 'react-native';
 import {
     INFINITE_ANIMATION_ITERATIONS,
@@ -20,29 +22,29 @@ import {
     Use,
     Image,
   } from 'react-native-svg';
-  import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+  import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native-gesture-handler';
   import Icon from 'react-native-vector-icons/FontAwesome';
-
+  import { useHttp } from '../services/utility/http.hook'
 
   import { ShipScreen } from './ShipScreen'
   import { SettingsScreen } from './SettingsScreen'
   import { ScheduleScreen } from './ScheduleScreen'
 
-  import NavigationService from '../services/utility/NavigationService';
-  import { NavigationStackProp } from 'react-navigation-stack';
-
   import { createStackNavigator } from '@react-navigation/stack';
 
   import Globals from '../component-library/Globals';
+  import Config from "react-native-config";
 
   // import { rootReducer } from '../redux/rootReducer'
   import { authReducer } from '../redux/authReducer'
 
+  const axios = require('axios');
+
   // import BackendApiClient from '../services/api/BackendApiClient';
 
-  interface Props {
-    navigation: NavigationStackProp;
-  }
+  // interface Props {
+  //   navigation: NavigationStackProp;
+  // }
 
   type LatLngObject = { lat: number; lng: number };
   
@@ -76,9 +78,7 @@ import {
     }
 
   ];
-  // if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-  //   showZoom = false;
-  //  }
+
 const getDuration = (): number => Math.floor(Math.random() * 3) + 1;
 const getDelay = (): number => Math.floor(Math.random()) * 0.5;
 const iterationCount = "infinite";
@@ -153,6 +153,8 @@ export const MapScreen = ({navigation}) => {
       const [ownPosition, setOwnPosition] = useState(null);
     const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
 
+
+
     const onMessageReceived = (message: WebviewLeafletMessage) => {
         switch (message.event) {
           case WebViewLeafletEvents.ON_MAP_MARKER_CLICKED:
@@ -188,16 +190,66 @@ export const MapScreen = ({navigation}) => {
 
       // const onIncrement={() => store.dispatch({ type: 'INCREMENT' })}
 
+      const { loading, error, request } = useHttp()
+      
+      const getMapData = async () => {
+        console.log(Config.apiUrl)
+        const token = AsyncStorage.getItem('token')
+        try {
+          // const fetched = await request('https://api.app.fleettracker.de/api/ships', 'GET', null, {
+          //   Authorization: `Bearer ${token}`
+          // })
+
+          const f = await axios.get('https://api.app.fleettracker.de/api/ships/',
+            {
+              Authorization: `Bearer ${token}`
+            }
+          )
+          // console.log(f)
+
+          // const userId = await axios.get(`${Config.API_BASE_URL_DEV}auth/signup_app/`,
+          // { 'phone': `${phone}` },
+          // {
+          //     headers: { 'Content-Type': 'application/json' },
+          // })
+
+          // console.log('Ids', fetched)
+          console.log('test')
+        } catch(e) {
+          console.log(e)
+        }
+      }
+
       useEffect(() => {
+        const token = AsyncStorage.getItem('Token')
+        console.log(token)
         // console.log(authReducer)
         // console.log(BackendApiClient.getApiBaseUrl())
+        getMapData()
       }, [])
 
       return (
           <View style={{ height: '100%' }}>
-              <View style={styles.refresh}>
-                <Icon name='refresh' style={styles.refreshIcon} />
-              </View>
+              {/* <TouchableWithoutFeedback
+                // style={{zIndex: 99999, width: 200, height: 100, backgroundColor: 'red'}}
+                style={styles.refresh}
+                onPress={() => {
+                    getMapData()
+                  }
+                }
+              > */}
+              <TouchableHighlight
+                style={styles.refresh}
+                onPress={() => {
+                    getMapData()
+                  }
+                }
+              >
+                {/* <View style={styles.refresh}> */}
+                  <Icon name='refresh' style={styles.refreshIcon} />
+                {/* </View> */}
+              </TouchableHighlight>
+              {/* </TouchableWithoutFeedback> */}
               {/* <View style={{height: 37, backgroundColor: '#fff', width: '100%', top: 0, zIndex: 9999,}}/> */}
               <View style={styles.header}>
                   <TextInput 
@@ -222,9 +274,6 @@ export const MapScreen = ({navigation}) => {
               // ref={(ref: WebViewLeaflet) => {
               //   setWebViewLeafletRef(ref);
               // }}
-              // zoomControl={false}
-              // backgroundColor={"blue"}
-
               onMessageReceived={onMessageReceived}
               mapLayers={[
                 {
