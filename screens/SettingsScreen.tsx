@@ -31,10 +31,9 @@ const Stack = createStackNavigator();
 // }
 
 export const SettingsScreen = ({navigation}) => {
-// const Settings = () => {
     return (
         <View style={styles.settings}>
-            {/* <View style={styles.header}>
+            <View style={styles.header}>
                 <TouchableWithoutFeedback
                     onPress={() => navigation.goBack()}
                 >
@@ -42,7 +41,7 @@ export const SettingsScreen = ({navigation}) => {
                 </TouchableWithoutFeedback>
                 <Text style={styles.headerTitle}>SETTINGS</Text>
                 <Icon name="crosshairs" style={styles.headerHiddenIcon} />
-            </View> */}
+            </View>
             <Image style={styles.logo} source={require('../assets/logo.png')} />
             <TouchableWithoutFeedback
                  onPress={() => {
@@ -78,6 +77,7 @@ const styles = StyleSheet.create({
         top: 0,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
         paddingVertical: 20,
         paddingHorizontal: 10
     },
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         opacity: 0
     },
     headerTitle: {
-
+        fontWeight: '700',
     },
     logo: {
         alignItems: 'center',

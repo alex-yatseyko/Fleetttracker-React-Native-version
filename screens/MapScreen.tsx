@@ -126,11 +126,30 @@ export const MapScreen = ({navigation}) => {
       const [ownPosition, setOwnPosition] = useState(null);
       const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
 
-      const [locations, setLocations] = useState()
+      const [locations, setLocations] = useState([{
+        icon: `<div style="margin-top: -20px;">
+        <img style='transform: scale(${scale}) rotate(145deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
+        <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Lviv</div>
+        </div>`,
+        position: { lat: 49.841140, lng: 24.026591 },
+        name: "Lviv",
+      },
+      {
+        icon: `<div style="margin-top: -20px;"  >
+        <img style='transform: scale(${scale}) rotate(75deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
+        <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Kyiv</div>
+        </div>
+        `,
+        position: { lat: 50.467313, lng: 30.520483 },
+        name: "Kyiv",
+      }])
       const [filteredLocations, setFilteredLocations] = useState()
       
       const [loading, setLoading] = useState()
 
+      const img = require('../assets/logo.png')
+
+      // <img style='transform: scale(${scale}) rotate(145deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
       const locationsTest: { icon: string; position: LatLng; name: string }[] = [
         {
           icon: `<div style="margin-top: -20px;">
@@ -157,8 +176,12 @@ export const MapScreen = ({navigation}) => {
         switch (message.event) {
           case WebViewLeafletEvents.ON_MAP_MARKER_CLICKED:
             // Alert.alert(
+              // console.log(message.event)
               // `Map Marker Touched, ID: ${message.payload.mapMarkerID || "unknown"}`
-              navigation.navigate('Ship')
+              navigation.navigate('Ship', {
+                // name: ,
+                // id: ,
+              })
             // );
     
         //     break;
@@ -213,7 +236,9 @@ export const MapScreen = ({navigation}) => {
 
                       data.push({
                         "id": idKey,
-                        "name": item['name']
+                        "icon": '',
+                        "position": '',
+                        "name": item['name'],
                       })
                     }
                     // console.log(data)
@@ -221,6 +246,8 @@ export const MapScreen = ({navigation}) => {
                     // Loop for getting ids
                     fetched['hydra:member'].forEach(getIds)
           // console.log(fetchedShipIds) // Ids
+
+          // console.log(data)
 
           for(let i = 0; i < fetchedShipIds.length; i++) {
               // console.log(fetchedShipIds[i])
@@ -233,12 +260,33 @@ export const MapScreen = ({navigation}) => {
               if(fetchedDetails == null) {
                 fetchedDetails = ''
               }
-              // console.log(fetchedDetails.posx)
-              // console.log(fetchedDetails.posy)
-              // console.log(fetchedDetails.cmg)
+
+              // console.log(data[i])
+              if(data[i]["id"] === _id) {
+                // data[i]["icon"] = fetchedDetails.cmg
+                
+                data[i]["icon"] = 
+                `<div style="margin-top: -20px;">
+                  <img style='transform: scale(${scale}) rotate(${fetchedDetails.cmg}deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
+                  <div style="font-size: 12px; font-weight: 800; text-align: center; margin-top: -14px; text-shadow: -1.5px 2px 2px #fff, 1.5px 2px 2px #fff, -1.5px -2px 2px #fff, 1.5px -2px 2px #fff;
+                }background: transparent;">${data[i]["name"]}</div>
+                </div>`
+                data[i]["position"] = { lat: fetchedDetails.posy / 60000, lng: fetchedDetails.posx / 60000 }
+                
+                // console.log(data[i])
+                // data[i]["position"] = { lat: parseFloat(fetchedDetails.posy / 60000), lng: 24.026591 }
+              }
+          }
+          
+          // console.log('TestData', data)
+          if(data) {
+            setLocations(data)
+            // console.log(data)
+            // console.log(data)
           }
 
-          console.log(fetched['hydra:member'][1]['name']) // Test if name works
+          // console.log(fetched['hydra:member'][1]['name']) // Test if name works
+         
           // if(fetched) {
           //   const newObject = [
           //     {
@@ -408,7 +456,7 @@ export const MapScreen = ({navigation}) => {
                   }
                 }
               >
-                  <Icon name='refresh' style={styles.refreshIcon} />
+                <Icon name='refresh' style={styles.refreshIcon} />
               </TouchableHighlight>
               <View style={styles.header}>
                   <TextInput 
@@ -426,9 +474,7 @@ export const MapScreen = ({navigation}) => {
                   </TouchableWithoutFeedback>
               </View>
             <WebViewLeaflet
-              // ref={(ref: WebViewLeaflet) => {
-              //   setWebViewLeafletRef(ref);
-              // }}
+              // ref={(ref: WebViewLeaflet) => {setWebViewLeafletRef(ref);}}
               onMessageReceived={onMessageReceived}
               mapLayers={[
                 {
@@ -437,7 +483,7 @@ export const MapScreen = ({navigation}) => {
                 },
               ]}
               mapMarkers={[
-                  ...locationsTest.map(location => {
+                  ...locations.map(location => {
                     return {
                       id: location.name.replace(" ", "-"),
                       position: location.position,
