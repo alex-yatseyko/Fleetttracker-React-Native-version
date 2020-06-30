@@ -176,11 +176,11 @@ export const MapScreen = ({navigation}) => {
         switch (message.event) {
           case WebViewLeafletEvents.ON_MAP_MARKER_CLICKED:
             // Alert.alert(
-              // console.log(message.event)
+              console.log(message.event)
+              console.log(message)
               // `Map Marker Touched, ID: ${message.payload.mapMarkerID || "unknown"}`
               navigation.navigate('Ship', {
-                // name: ,
-                // id: ,
+                data: message.payload.mapMarkerID,
               })
             // );
     
@@ -238,7 +238,8 @@ export const MapScreen = ({navigation}) => {
                         "id": idKey,
                         "icon": '',
                         "position": '',
-                        "name": item['name'],
+                        "title": item['name'],
+                        "name": `${item['name']}${idKey}`,
                       })
                     }
                     // console.log(data)
@@ -269,7 +270,7 @@ export const MapScreen = ({navigation}) => {
                 `<div style="margin-top: -20px;">
                   <img style='transform: scale(${scale}) rotate(${fetchedDetails.cmg}deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
                   <div style="font-size: 12px; font-weight: 800; text-align: center; margin-top: -14px; text-shadow: -1.5px 2px 2px #fff, 1.5px 2px 2px #fff, -1.5px -2px 2px #fff, 1.5px -2px 2px #fff;
-                }background: transparent;">${data[i]["name"]}</div>
+                }background: transparent;">${data[i]["title"]}</div>
                 </div>`
                 data[i]["position"] = { lat: fetchedDetails.posy / 60000, lng: fetchedDetails.posx / 60000 }
                 
@@ -419,15 +420,9 @@ export const MapScreen = ({navigation}) => {
                   fetchedFuture.push(fetchedSchedule)
                   // console.log(e)
 
-                  // localStorage.setItem(storageName, JSON.stringify({
-                  //   ships: fetched,
-                  //   shipIds: fetchedShipIds,
-                  //   scheduleIds: fetchedScheduleIds,
-                  // }))
-
-                  // AsyncStorage.setItem('Ships', fetched['hydra:member'])
-                  // AsyncStorage.setItem('ShipsIds', JSON.stringify(fetchedShipIds))
-                  // AsyncStorage.setItem('ScheduleIds', JSON.stringify(fetchedScheduleIds))
+                  AsyncStorage.setItem('Ships', JSON.stringify(fetched['hydra:member']))
+                  AsyncStorage.setItem('ShipsIds', JSON.stringify(fetchedShipIds))
+                  AsyncStorage.setItem('ScheduleIds', JSON.stringify(fetchedScheduleIds))
 
                   setLocations(fetched['hydra:member'])
                   setFilteredLocations(fetched['hydra:member'])
