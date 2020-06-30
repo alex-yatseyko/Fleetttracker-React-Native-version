@@ -201,6 +201,8 @@ export const MapScreen = ({navigation}) => {
           // Createing arrays to store data
           const fetchedShipIds = []
           const fetchedScheduleIds = []
+
+          const data = []
                     
           // /* Function for getting IDs */
                     const getIds = (item) => {
@@ -208,23 +210,45 @@ export const MapScreen = ({navigation}) => {
                       const scheduleIdKey = item['schedules'][0]['@id'].slice(15, 19)
                       fetchedShipIds.push(idKey)
                       fetchedScheduleIds.push(scheduleIdKey)
+
+                      data.push({
+                        "id": idKey,
+                        "name": item['name']
+                      })
                     }
+                    // console.log(data)
               
                     // Loop for getting ids
                     fetched['hydra:member'].forEach(getIds)
           // console.log(fetchedShipIds) // Ids
 
-
-          // console.log(fetched['hydra:member'][1]['name']) // Test if name works
-          if(fetched) {
-            const newObject = [
-              {
-                "name": fetched['hydra:member'][1]['name'],
-                "icon": '',
-                "position": '',
+          for(let i = 0; i < fetchedShipIds.length; i++) {
+              // console.log(fetchedShipIds[i])
+              const _id = fetchedShipIds[i]
+              // console.log(_id)
+              let fetchedDetails = await request(`https://staging.api.app.fleettracker.de/api/ships/${_id}/latest_position`, 'GET', null, {
+                Authorization: `Bearer ${token}`
+              })
+              // console.log(fetchedCapt)
+              if(fetchedDetails == null) {
+                fetchedDetails = ''
               }
-            ]
+              // console.log(fetchedDetails.posx)
+              // console.log(fetchedDetails.posy)
+              // console.log(fetchedDetails.cmg)
           }
+
+          console.log(fetched['hydra:member'][1]['name']) // Test if name works
+          // if(fetched) {
+          //   const newObject = [
+          //     {
+          //       "name": fetched['hydra:member'][1]['name'],
+          //       "icon": '',
+          //       "position": '',
+          //     }
+          //   ]
+          //   console.log(newObject)
+          // }
           // fetched ? console.log (fetched['hydra:member']) : null
         } catch(e) {
           console.log(e)
