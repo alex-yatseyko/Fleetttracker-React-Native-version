@@ -48,9 +48,6 @@ export const AuthScreen = ({navigation}) => {
             AsyncStorage.setItem('Token', data.token)
             AsyncStorage.setItem('Name', login)
             AsyncStorage.setItem('Password', pass)
-
-            const s = AsyncStorage.getItem('Token')
-            console.log(s)
             navigation.navigate('Bottom')
         } catch (e) {
             alert('Name or Password is incorrect')

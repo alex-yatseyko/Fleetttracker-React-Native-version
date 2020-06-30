@@ -53,28 +53,6 @@ import {
   const icon = `<svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="40" height="40"><defs><path d="M320.8 7.2L501.6 640L140 640L320.8 7.2Z" id="b1OuTbAhqc"></path></defs><g><g><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill="#fefe02" fill-opacity="1"></use><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="14" stroke-opacity="1"></use></g></g></g></g></svg>`
   const scale = .6;
 
-  const locations: { icon: string; position: LatLng; name: string }[] = [
-    {
-      icon: `<div style="margin-top: -20px;">
-      <img style='transform: scale(${scale}) rotate(145deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
-      <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Lviv</div>
-      </div>`,
-      position: { lat: 49.841140, lng: 24.026591 },
-      name: "Lviv",
-    },
-    {
-      // icon: `<div style="margin-top: -20px;"  onClick="${navigation.navigate('Auth')}>
-      icon: `<div style="margin-top: -20px;"  >
-      <img style='transform: scale(${scale}) rotate(75deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
-      <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Kyiv</div>
-      </div>
-      `,
-      position: { lat: 50.467313, lng: 30.520483 },
-      name: "Kyiv",
-    }
-
-  ];
-
 const getDuration = (): number => Math.floor(Math.random() * 3) + 1;
 const getDelay = (): number => Math.floor(Math.random()) * 0.5;
 const iterationCount = "infinite";
@@ -139,7 +117,6 @@ export const MapScreen = ({navigation}) => {
   )
 }
 
-  // export const MapScreen = ({navigation}) => {
   const Map = ({navigation}) => {
     const [mapCenterPosition, setMapCenterPosition] = useState({
         lat: 40.153238,
@@ -149,6 +126,31 @@ export const MapScreen = ({navigation}) => {
       const [ownPosition, setOwnPosition] = useState(null);
       const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
 
+      const [locations, setLocations] = useState()
+      const [filteredLocations, setFilteredLocations] = useState()
+      
+      const [loading, setLoading] = useState()
+
+      const locationsTest: { icon: string; position: LatLng; name: string }[] = [
+        {
+          icon: `<div style="margin-top: -20px;">
+          <img style='transform: scale(${scale}) rotate(145deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
+          <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Lviv</div>
+          </div>`,
+          position: { lat: 49.841140, lng: 24.026591 },
+          name: "Lviv",
+        },
+        {
+          icon: `<div style="margin-top: -20px;"  >
+          <img style='transform: scale(${scale}) rotate(75deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
+          <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Kyiv</div>
+          </div>
+          `,
+          position: { lat: 50.467313, lng: 30.520483 },
+          name: "Kyiv",
+        }
+    
+      ];
 
 
     const onMessageReceived = (message: WebviewLeafletMessage) => {
@@ -186,33 +188,190 @@ export const MapScreen = ({navigation}) => {
 
       // const onIncrement={() => store.dispatch({ type: 'INCREMENT' })}
 
-      const { loading, error, request } = useHttp()
+      const { error, request } = useHttp()
       
       const getMapData = async () => {
         const token = await AsyncStorage.getItem('Token')
-        // console.log('Url', Config.apiUrl)
         try {
-          console.log('token', token)
           const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
             Authorization: `Bearer ${token}`
           })
-          console.log(fetched)
+          
 
+          // Createing arrays to store data
+          const fetchedShipIds = []
+          const fetchedScheduleIds = []
+                    
+          // /* Function for getting IDs */
+                    const getIds = (item) => {
+                      const idKey = item['@id'].slice(11, 15)
+                      const scheduleIdKey = item['schedules'][0]['@id'].slice(15, 19)
+                      fetchedShipIds.push(idKey)
+                      fetchedScheduleIds.push(scheduleIdKey)
+                    }
+              
+                    // Loop for getting ids
+                    fetched['hydra:member'].forEach(getIds)
+          // console.log(fetchedShipIds) // Ids
+
+
+          // console.log(fetched['hydra:member'][1]['name']) // Test if name works
+          if(fetched) {
+            const newObject = [
+              {
+                "name": fetched['hydra:member'][1]['name'],
+                "icon": '',
+                "position": '',
+              }
+            ]
+          }
+          // fetched ? console.log (fetched['hydra:member']) : null
+        } catch(e) {
+          console.log(e)
+        }
+      }
+
+      const getMapDataOld = async () => {
+        const token = await AsyncStorage.getItem('Token')
+        // console.log('Url', Config.apiUrl)
+        try {
+          // console.log('token', token)
+          const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
+            Authorization: `Bearer ${token}`
+          })
+          console.log('Test', fetched)
+
+          // Createing arrays for saving data
+          const fetchedShipIds = []
+          const fetchedScheduleIds = []
+          
+          /* Function for getting IDs */
+          const getIds = (item) => {
+            const idKey = item['@id'].slice(11, 15)
+            const scheduleIdKey = item['schedules'][0]['@id'].slice(15, 19)
+            fetchedShipIds.push(idKey)
+            fetchedScheduleIds.push(scheduleIdKey)
+          }
+    
+          // Loop for getting ids
+          fetched['hydra:member'].forEach(getIds)
+          
+          console.log('Works')
+          
+          // Request for all the details
+          for(let i = 0; i < fetchedShipIds.length; i++) {
+            // console.log(i)
+            const _id = fetchedShipIds[i]
+            let fetchedCapt = await request(`https://staging.api.app.fleettracker.de/api/ships/${_id}/latest_position`, 'GET', null, {
+                Authorization: `Bearer ${token}`
+            })
+            if(fetchedCapt == null) {
+              //   console.log(_id)
+              fetchedCapt = ''
+            }
+            // Adding to the main Fetched details
+            fetched['hydra:member'][i]['latest_position'] = fetchedCapt
+          }
+
+
+          let fetchedFuture = []
+          for(let j = 0; j < fetchedScheduleIds.length; j++) {
+              const _id = fetchedScheduleIds[j]
+              try{
+                  let fetchedSchedule = await request(`https://staging.api.app.fleettracker.de/api/future_schedule_entries?schedule_id=${_id}`, 'GET', null, {
+                      Authorization: `Bearer ${token}`
+                  })
+                  if(fetchedSchedule === undefined) {
+                      console.log('Test')
+                  }
+                  if(fetchedSchedule['hydra:member'].length === 1){
+                      fetchedSchedule = {
+                          'hydra:member': [
+                              { etd: fetchedSchedule['hydra:member'][0]['eta'], foid: fetchedSchedule['hydra:member'][0]['foid']},
+                              { eta: 'No data', etd: 'No data' },
+                              { eta: 'No data', etd: 'No data' }
+                          ]
+                      }
+                  }
+                  if(fetchedSchedule['hydra:member'].length === 2){                         
+                      fetchedSchedule = {
+                          'hydra:member': [
+                              { etd: fetchedSchedule['hydra:member'][0]['eta'], foid: fetchedSchedule['hydra:member'][0]['foid']},
+                              { etd: fetchedSchedule['hydra:member'][1]['eta'], foid: fetchedSchedule['hydra:member'][1]['foid']},
+                              { eta: 'No data', etd: 'No data' }
+                          ]
+                      }
+                  }
+                  if(fetchedSchedule['hydra:totalItems'] === 0) {
+                      fetchedSchedule = {
+                          'hydra:member': [
+                              { eta: 'No data', etd: 'No data' },
+                              { eta: 'No data', etd: 'No data' },
+                              { eta: 'No data', etd: 'No data' }
+                          ]
+                      }
+                  }
+
+                  if(fetchedSchedule['hydra:member'][0]['foid']) {
+                      let obj1 = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fetchedSchedule['hydra:member'][0]['foid']}`, 'GET', null, {
+                          Authorization: `Bearer ${token}`
+                      })
+                      fetchedSchedule['hydra:member'][0]['countrycode'] = obj1['countrycode']
+                      fetchedSchedule['hydra:member'][0]['unlocationcode'] = obj1['unlocationcode']
+                  }
+                  if(fetchedSchedule['hydra:member'][1]['foid']) {
+                      let obj1 = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fetchedSchedule['hydra:member'][1]['foid']}`, 'GET', null, {
+                          Authorization: `Bearer ${token}`
+                      })
+                      fetchedSchedule['hydra:member'][1]['countrycode'] = obj1['countrycode']
+                      fetchedSchedule['hydra:member'][1]['unlocationcode'] = obj1['unlocationcode']
+                  }
+                  if(fetchedSchedule['hydra:member'][2]['foid']) {
+                      let obj1 = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fetchedSchedule['hydra:member'][2]['foid']}`, 'GET', null, {
+                          Authorization: `Bearer ${token}`
+                      })
+                      fetchedSchedule['hydra:member'][2]['countrycode'] = obj1['countrycode']
+                      fetchedSchedule['hydra:member'][2]['unlocationcode'] = obj1['unlocationcode']
+                  }
+
+                  fetchedFuture.push(fetchedSchedule)
+                  
+              } catch(e) {
+                  const fetchedSchedule = {
+                      'hydra:member': [
+                          { eta: 'No data', etd: 'No data' },
+                          { eta: 'No data', etd: 'No data' },
+                          { eta: 'No data', etd: 'No data' },
+                      ]
+                  }
+                  fetchedFuture.push(fetchedSchedule)
+                  // console.log(e)
+
+                  // localStorage.setItem(storageName, JSON.stringify({
+                  //   ships: fetched,
+                  //   shipIds: fetchedShipIds,
+                  //   scheduleIds: fetchedScheduleIds,
+                  // }))
+
+                  // AsyncStorage.setItem('Ships', fetched['hydra:member'])
+                  // AsyncStorage.setItem('ShipsIds', JSON.stringify(fetchedShipIds))
+                  // AsyncStorage.setItem('ScheduleIds', JSON.stringify(fetchedScheduleIds))
+
+                  setLocations(fetched['hydra:member'])
+                  setFilteredLocations(fetched['hydra:member'])
+                  setLoading(false)
+              }
+          }
+
+          for(let k = 0; k < fetched['hydra:member'].length; k++) {
+              fetched['hydra:member'][k]['future'] = fetchedFuture[k]
+          }         
         } catch(e) {
           console.log(e)
         }
       }
 
       useEffect(() => {
-        // const token = AsyncStorage.getItem('Token')
-        // console.log('Token', token)
-        // token.then(
-        //   result => {
-        //     // первая функция-обработчик - запустится при вызове resolve
-        //     alert("Fulfilled: " + result); // result - аргумент resolve
-        // })
-        // console.log(authReducer)
-        // console.log(BackendApiClient.getApiBaseUrl())
         getMapData()
       }, [])
 
@@ -254,7 +413,7 @@ export const MapScreen = ({navigation}) => {
                 },
               ]}
               mapMarkers={[
-                  ...locations.map(location => {
+                  ...locationsTest.map(location => {
                     return {
                       id: location.name.replace(" ", "-"),
                       position: location.position,
@@ -320,7 +479,7 @@ export const MapScreen = ({navigation}) => {
       zIndex: 999,
       backgroundColor: Globals.color.main,
       bottom: 28,
-      right: 8,
+      right: 18,
       paddingHorizontal: 20,
       paddingVertical: 18,
       borderRadius: 60
