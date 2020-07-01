@@ -33,8 +33,8 @@ export const ShipScreen = ({route, navigation}) => {
             const fetchedShipLatestPosition = await request(`https://staging.api.app.fleettracker.de/api/ships/${shipId}/latest_position`, 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
-            console.log(fetchedShip)
-            console.log(fetchedShipLatestPosition)
+            // console.log(fetchedShip)
+            // console.log(fetchedShipLatestPosition)
 
             const shipLocation:any = [fetchedShipLatestPosition.posy / 60000, fetchedShipLatestPosition.posx / 60000]
             setLocation(shipLocation)
@@ -46,7 +46,7 @@ export const ShipScreen = ({route, navigation}) => {
             const fetchedFuture = await request(`https://staging.api.app.fleettracker.de/api/future_schedule_entries?schedule_id=${scheduleId}`, 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
-            console.log('Future', fetchedFuture['hydra:member'])
+            // console.log('Future', fetchedFuture['hydra:member'])
 
                         /* Places requests */
             let i
@@ -56,7 +56,7 @@ export const ShipScreen = ({route, navigation}) => {
                 const fetchedFixedObj = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fixedID}`, 'GET', null, {
                     Authorization: `Bearer ${token}`
                 })
-                console.log(fetchedFixedObj)
+                // console.log(fetchedFixedObj)
                 // console.log([posx / 60000, posy / 60000])
 
                 fetchedFuture['hydra:member'][i]['unlocationcode'] = fetchedFixedObj.unlocationcode
@@ -64,7 +64,7 @@ export const ShipScreen = ({route, navigation}) => {
                 fetchedFuture['hydra:member'][i]['name'] = fetchedFixedObj.name
             }
             
-            console.log('Future Edited', fetchedFuture['hydra:member'])            
+            // console.log('Future Edited', fetchedFuture['hydra:member'])            
 
             /* Places requests */
 
@@ -74,7 +74,7 @@ export const ShipScreen = ({route, navigation}) => {
                 const fetchedFixedObj = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fixedID}`, 'GET', null, {
                     Authorization: `Bearer ${token}`
                 })
-                console.log(fetchedFixedObj)
+                // console.log(fetchedFixedObj)
                 // console.log([posx / 60000, posy / 60000])
 
                 fetchedFuture['hydra:member'][i]['unlocationcode'] = fetchedFixedObj.unlocationcode
@@ -82,7 +82,7 @@ export const ShipScreen = ({route, navigation}) => {
                 fetchedFuture['hydra:member'][i]['name'] = fetchedFixedObj.name
             }
             
-            console.log('Future Edited', fetchedFuture['hydra:member'])
+            // console.log('Future Edited', fetchedFuture['hydra:member'])
 
             setFuture(fetchedFuture)
         } catch(e) {
@@ -91,8 +91,8 @@ export const ShipScreen = ({route, navigation}) => {
     }
 
     useEffect(() => {
-        console.log(data)
-        console.log(data.slice(11, 15))
+        // console.log(data)
+        // console.log(data.slice(11, 15))
         getShip()
     }, [])
 
@@ -124,19 +124,30 @@ export const ShipScreen = ({route, navigation}) => {
         <View style={styles.container}>
  
             <View style={styles.header}>
-                <Feather name="chevron-left" style={styles.leftIcon} />
+                <TouchableWithoutFeedback
+                    onPress={() => navigation.goBack()}
+                >
+                    <Feather name="chevron-left" style={styles.leftIcon} />
+                </TouchableWithoutFeedback>
                 <Text style={styles.headerTitle}>{data.slice(0, -4)}</Text>
-                <Icon name="crosshairs" style={styles.rightIcon} />
+                <TouchableWithoutFeedback
+                    onPress={() => navigation.navigate('Map',
+                        {
+                            current: location
+                        }
+                    )}
+                >
+                    <Icon name="crosshairs" style={styles.rightIcon} />
+                </TouchableWithoutFeedback>
             </View>
-                    {/* <Text>{data.slice(11, 15)}</Text>
-                    <Text>{data.slice(0, -4)}</Text>
-                    <Text>{data.slice(data.length - 4, data.length)}</Text> */}
-                <ScrollView>
+                <ScrollView style={styles.scrollView}>
                     {(future['hydra:member'].length > 0) ? future['hydra:member'].map(i => {
                         return(
                             <View key={i['@id']} style={styles.detailsSchedule}>
                                 <TouchableWithoutFeedback
-                                    onPress={() => {navigation.navigate('Schedule')}}
+                                    onPress={() => {navigation.navigate('Schedule', {
+                                        scheduleId: idSchedule
+                                    })}}
                                     style={styles.scheduleWrapper}
                                 >
                                     {/* <Text>{i['name']}</Text> */}
@@ -186,9 +197,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         flex: 1,
         backgroundColor: '#fff',
-        paddingTop: 40,
-      },
+        paddingTop: 80,
+        // marginBottom: 0,
+    },
       header: {
+        paddingTop: 20,
+        // paddingBottom: 120,
+        // marginTop: 20,
         zIndex: 99,
         backgroundColor: '#fff',
         position: 'absolute',
@@ -198,7 +213,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 20,
-        height: 60,
+        height: 80,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -252,6 +267,11 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: 16,
         color: '#333'
+    },
+    scrollView: {
+        paddingTop: 40,
+        // paddingBottom: 300,
+        // marginBottom: 100,
     },
       notFound: {
 

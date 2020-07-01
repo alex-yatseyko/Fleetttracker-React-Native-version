@@ -3,18 +3,50 @@ import {
     StyleSheet,
     View,
     Text,
+    AsyncStorage,
     TextInput,
     Image,
     FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import IconOld from 'react-native-vector-icons/FontAwesome';
+import { useHttp } from '../services/utility/http.hook'
 
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import Globals from '../component-library/Globals';
 
-export const ScheduleScreen = ({navigation}) => {
+export const ScheduleScreen = ({route, navigation}) => {
+    const [ schedule, setSchedule ] = useState([])
+    const [ agent, setAgent ] = useState([])
+
+    const { request } = useHttp()
+
+    const getSchedule = async () => {
+        const token = await AsyncStorage.getItem('Token')
+        const scheduleId = route.params.scheduleId   
+        try {
+            const fetchedSchedule = await request(`https://staging.api.app.fleettracker.de/api/schedule_entries/${scheduleId}`, 'GET', null, {
+                Authorization: `Bearer ${token}`
+            })
+            console.log(fetchedSchedule)
+            setSchedule(fetchedSchedule)
+
+            const fetchedAgent = await request(`https://staging.api.app.fleettracker.de/api/schedule_agents/${fetchedSchedule.scheduleagentid}`, 'GET', null, {
+                Authorization: `Bearer ${token}`
+            })
+            console.log(fetchedAgent)
+            setAgent(fetchedAgent)
+
+            // setLoadingScreen(false)
+        } catch(e) {}
+    }
+
+    useEffect(() => {
+        getSchedule()
+        // console.log(agent)
+    }, [getSchedule])
+
     return(
     <View style={styles.settings}>
             <View style={styles.listItem}>
@@ -23,7 +55,7 @@ export const ScheduleScreen = ({navigation}) => {
                 </View>
                 <Text style={styles.mediumText}>Mallorca</Text>
             </View>
-
+            {/* <Text>{route.params.scheduleId}</Text> */}
             <View style={styles.listItem}>
                 <View style={styles.listIcon}>
                     <Icon name="home" style={styles.scheduleIcon} />

@@ -42,7 +42,7 @@ export const AuthScreen = ({navigation}) => {
     const loginHandler = async () => {
         try {
             const data = await request('https://staging.api.app.fleettracker.de/api/token', 'POST', {'name': login, 'password': pass}, {'Content-Type': 'application/json'})
-            console.log('Token: ', data.token)
+            // console.log('Token: ', data.token)
             // console.log('RefreshToken', data.refresh_token)
             // auth.login(data.token, data.refresh_token)
             AsyncStorage.setItem('Token', data.token)

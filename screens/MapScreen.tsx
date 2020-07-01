@@ -76,17 +76,18 @@ export const MapScreen = ({navigation}) => {
           name="Ship" 
           component={ShipScreen}
           options={{ 
-            title: 'Ship Title',
-            headerBackTitleStyle: { 
-              color: 'white' 
-            },
-            headerRight: () => (
-                <TouchableWithoutFeedback
-                onPress={() => alert('Focus ship on the map')}
-                >
-                  <Icon name="crosshairs" style={styles.headerIcon} />
-                </TouchableWithoutFeedback>
-            ), 
+            headerShown: false,
+            // title: 'Ship Title',
+            // headerBackTitleStyle: { 
+            //   color: 'white' 
+            // },
+            // headerRight: () => (
+            //     <TouchableWithoutFeedback
+            //     onPress={() => alert('Focus ship on the map')}
+            //     >
+            //       <Icon name="crosshairs" style={styles.headerIcon} />
+            //     </TouchableWithoutFeedback>
+            // ), 
           }}
         />
         <Stack.Screen 
