@@ -66,7 +66,12 @@ export default function App() {
     }}> */}
       <NavigationContainer>           
         <View style={styles.container}>
-        <Stack.Navigator initialRouteName="Auth">
+        <Stack.Navigator 
+          initialRouteName="Auth"
+          screenOptions={({ route, navigation }) => ({
+            headerShown: false,
+          })}
+        >
           <Stack.Screen
             name="Auth" 
             component={AuthScreen}
@@ -109,19 +114,20 @@ export default function App() {
             name="Ship" 
             component={ShipScreen}
             options={{ 
-              title: 'Ship Title',
-              headerBackTitleStyle: { 
-                color: 'white' 
-              },
-              headerRight: () => (
-                // <View style={{ transform: [{ scaleX: "-1" }] }}>
-                  <TouchableWithoutFeedback
-                    onPress={() => alert('Focus ship on the map')}
-                  >
-                    <Icon name="crosshairs" style={styles.headerIcon} />
-                  </TouchableWithoutFeedback>
-                // </View>
-              ), 
+              headerShown: false,
+              // title: 'Ship Title',
+              // headerBackTitleStyle: { 
+              //   color: 'white' 
+              // },
+              // headerRight: () => (
+              //   // <View style={{ transform: [{ scaleX: "-1" }] }}>
+              //     <TouchableWithoutFeedback
+              //       onPress={() => alert('Focus ship on the map')}
+              //     >
+              //       <Icon name="crosshairs" style={styles.headerIcon} />
+              //     </TouchableWithoutFeedback>
+              //   // </View>
+              // ), 
             }}
           /> 
           {/* <Stack.Screen

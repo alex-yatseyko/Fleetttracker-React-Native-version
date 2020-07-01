@@ -12,9 +12,14 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useHttp } from '../services/utility/http.hook'
 import Globals from '../component-library/Globals';
 import countries from '../assets/data/countryCodeISO.json'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Feather from 'react-native-vector-icons/Feather';
 
 export const ShipScreen = ({route, navigation}) => {
     const [ future, setFuture ] = useState([])
+    const [ location, setLocation ] = useState()
+    const [ idSchedule, setIdSchedule ] = useState()
 
     const { request } = useHttp()
     const { data } = route.params;
@@ -32,9 +37,11 @@ export const ShipScreen = ({route, navigation}) => {
             console.log(fetchedShipLatestPosition)
 
             const shipLocation:any = [fetchedShipLatestPosition.posy / 60000, fetchedShipLatestPosition.posx / 60000]
+            setLocation(shipLocation)
             AsyncStorage.setItem('currentLocation', JSON.stringify(shipLocation))
 
             const scheduleId = fetchedShip['schedules'][0]['@id'].slice(15, 19)
+            setIdSchedule(scheduleId)
 
             const fetchedFuture = await request(`https://staging.api.app.fleettracker.de/api/future_schedule_entries?schedule_id=${scheduleId}`, 'GET', null, {
                 Authorization: `Bearer ${token}`
@@ -97,58 +104,73 @@ export const ShipScreen = ({route, navigation}) => {
         )
     }
 
+    const testHeader = `               <View style={styles.header}>
+    <TouchableWithoutFeedback
+        onPress={() => navigation.goBack()}
+    >
+        {/* <Icon name="chevron-left" style={styles.headerIcon} /> */}
+        {/* <Entypo name="chevron-thin-left" style={styles.headerIcon}/> */}
+        <Feather name="chevron-left" style={styles.headerIcon} />
+    </TouchableWithoutFeedback>
+    <Text style={styles.headerTitle}>{data.slice(0, -4)}</Text>
+    <TouchableWithoutFeedback
+        onPress={() => navigation.goBack()}
+    >
+        <Icon name="crosshairs" style={styles.headerIcon} />
+    </TouchableWithoutFeedback>
+</View>`
+
     return(
-        <View style={styles.settings}>
-                {/* <Text>ShipScreen</Text> */}
-                    {/* <Text>Hamburg, Germany</Text>
-                    <Text>{data.slice(11, 15)}</Text>
+        <View style={styles.container}>
+ 
+            <View style={styles.header}>
+                <Feather name="chevron-left" style={styles.leftIcon} />
+                <Text style={styles.headerTitle}>{data.slice(0, -4)}</Text>
+                <Icon name="crosshairs" style={styles.rightIcon} />
+            </View>
+                    {/* <Text>{data.slice(11, 15)}</Text>
                     <Text>{data.slice(0, -4)}</Text>
-                <Text>{data.slice(data.length - 4, data.length)}</Text> */}
+                    <Text>{data.slice(data.length - 4, data.length)}</Text> */}
                 <ScrollView>
                     {(future['hydra:member'].length > 0) ? future['hydra:member'].map(i => {
                         return(
                             <View key={i['@id']} style={styles.detailsSchedule}>
                                 <TouchableWithoutFeedback
                                     onPress={() => {navigation.navigate('Schedule')}}
+                                    style={styles.scheduleWrapper}
                                 >
-                                                {/* <Text>{i['name']}</Text> */}
+                                    {/* <Text>{i['name']}</Text> */}
                                     <View style={styles.detailsPlace}>
                                         <Text style={styles.placeText}>{i['countrycode']} {i['unlocationcode']}</Text>
                                         <Text style={styles.mainText}>
-                                            <Text>{i['name']},</Text> 
+                                            <Text style={styles.boldText}>{i['name']},</Text> 
                                             <Text style={styles.detailsCountry}>{countries[`${i['countrycode']}`]}</Text>
                                         </Text>
-                                        <Text>{`
-
-                                        ${i['portactivities'][0] ? i['portactivities'][0] : 'No data'} 
-                                        ${i['portactivities'][1] ?', ' + i['portactivities'][1] : ''} 
-                                        ${i['portactivities'][2] ?', ' + i['portactivities'][2] : ''}
-
-                                        `}</Text>
+                                        <Text>{i['portactivities'][0] ? i['portactivities'][0] : 'No data'}{i['portactivities'][1] ?', ' + i['portactivities'][1] : ''}{i['portactivities'][2] ?', ' + i['portactivities'][2] : ''}</Text>
                                     </View>
                                     <View style={styles.detailsTimeline}>
                                         <View style={styles.circle} />
                                         <View style={styles.scheduleLineDetails} />
                                     </View>
                                     <View style={styles.detailsDates}>
-                                        <Text style={styles.dateText}>
-                                        {new Date(Date.parse(i['eta'])).getDate() > 9 ? new Date(Date.parse(i['eta'])).getDate() : `0${new Date(Date.parse(i['eta'])).getDate()}`}.
+                                        <View style={styles.dateWrapper}>
+                                            <Text style={styles.dateText}>{new Date(Date.parse(i['eta'])).getDate() > 9 ? new Date(Date.parse(i['eta'])).getDate() : `0${new Date(Date.parse(i['eta'])).getDate()}`}.
                                             {new Date(Date.parse(i['eta'])).getMonth() + 1 > 9 ? new Date(Date.parse(i['eta'])).getMonth() + 1 : `0${new Date(Date.parse(i['eta'])).getMonth() + 1} `}
-                                            {`${new Date(Date.parse(i['eta'])).getHours()}:00`}
+                                            {`${new Date(Date.parse(i['eta'])).getHours()}:00`}</Text>
                                             <Text style={styles.greyText}>  ETA</Text>
-                                        </Text>
-                                        <Text style={styles.dateText}>
-                                            {new Date(Date.parse(i['etd'])).getDate() > 9 ? new Date(Date.parse(i['etd'])).getDate() : `0${new Date(Date.parse(i['etd'])).getDate()}`}.
+                                        </View>
+                                        <View style={styles.dateWrapper}>
+                                            <Text style={styles.dateText}>{new Date(Date.parse(i['etd'])).getDate() > 9 ? new Date(Date.parse(i['etd'])).getDate() : `0${new Date(Date.parse(i['etd'])).getDate()}`}.
                                             {new Date(Date.parse(i['etd'])).getMonth() + 1 > 9 ? new Date(Date.parse(i['etd'])).getMonth() + 1 : `0${new Date(Date.parse(i['etd'])).getMonth() + 1} `}  
-                                            {`${new Date(Date.parse(i['etd'])).getHours()}:00`}
+                                            {`${new Date(Date.parse(i['etd'])).getHours()}:00`}</Text>
                                             <Text style={styles.greyText}>  ETB</Text>
-                                        </Text>
-                                        <Text style={styles.dateText}>
-                                            {new Date(Date.parse(i['etd'])).getDate() > 9 ? new Date(Date.parse(i['etd'])).getDate() : `0${new Date(Date.parse(i['etd'])).getDate()}`}.
+                                        </View>
+                                        <View style={styles.dateWrapper}>
+                                            <Text style={styles.dateText}>{new Date(Date.parse(i['etd'])).getDate() > 9 ? new Date(Date.parse(i['etd'])).getDate() : `0${new Date(Date.parse(i['etd'])).getDate()}`}.
                                             {new Date(Date.parse(i['etd'])).getMonth() + 1 > 9 ? new Date(Date.parse(i['etd'])).getMonth() + 1 : `0${new Date(Date.parse(i['etd'])).getMonth() + 1} `} 
-                                            {`${new Date(Date.parse(i['etd'])).getHours()}:00`}
+                                            {`${new Date(Date.parse(i['etd'])).getHours()}:00`}</Text>
                                             <Text style={styles.greyText}>  ETD</Text>
-                                        </Text>
+                                        </View>
                                     </View>
                                 </TouchableWithoutFeedback>
                             </View>
@@ -160,65 +182,144 @@ export const ShipScreen = ({route, navigation}) => {
 }
 
 const styles = StyleSheet.create({
-    settings: {
-        alignItems: 'center',
+    container: {
         justifyContent: 'space-evenly',
         flex: 1,
-        backgroundColor: '#fff'
-        // paddingTop: 200,
-        // padding: 20
+        backgroundColor: '#fff',
+        paddingTop: 40,
       },
+      header: {
+        zIndex: 99,
+        backgroundColor: '#fff',
+        position: 'absolute',
+        width: '100%',
+        top: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        height: 60,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
+      },
+      rightIcon: {
+        color: '#4A83B7',
+        fontSize: 23,
+      },
+      leftIcon: {
+        color: '#4A83B7',
+        fontSize: 33,
+      },
+    //   header: {
+    //     backgroundColor: '#fff',
+    //     position: 'absolute',
+    //     width: '100%',
+    //     top: 0,
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     // justifyContent: 'flex-end',
+    //     alignItems: 'flex-end',
+    //     paddingVertical: 20,
+    //     borderStartColor: '#fff',
+    //     paddingHorizontal: 10,
+    //     // borderBottomWidth: 1,
+    //     shadowColor: "#000",
+    //     shadowOffset: {
+    //         width: 0,
+    //         height: 2,
+    //     },
+    //     shadowOpacity: 0.23,
+    //     shadowRadius: 2.62,
+    //     elevation: 4,
+    //     // height: 60,
+    //     zIndex: 999,
+    // },
+    // headerIcon: {
+    //     fontSize: 44,
+    //     paddingTop: 12,
+    //     color: '#4A83B7',
+    // },
+    // headerHiddenIcon: {
+    //     opacity: 0
+    // },
+    headerTitle: {
+        fontWeight: '600',
+        fontSize: 16,
+        color: '#333'
+    },
       notFound: {
 
       },
+      scheduleWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+      },
       detailsSchedule: {
-        
+        flexDirection: 'row',
       },
       detailsPlace: {
         flexDirection: 'column',
         alignItems: 'flex-end',
         justifyContent: 'center',
-        marginRight: 30,
+        paddingRight: 15,
+        width: '100%'
+      },
+      detailsDates: {
+        textAlign: 'right',
+        width: 145,
+        minWidth: 130,
+        paddingLeft: 10,
+        paddingRight: 20,
+        flexDirection: 'column',
+        justifyContent: 'space-around',
       },
       detailsTimeline: {
         alignItems: 'flex-end',
         justifyContent: 'center',
         flexDirection: 'column',
+        // marginHorizontal: 30
       },
       circle: {
         backgroundColor: '#4A83B7',
-        width: 5,
-        height: 5,
+        width: 7,
+        height: 7,
         borderRadius: 25,
-        marginHorizontal: 30,
-        // margin: 0px 30px
+        position: 'absolute',
+        left: -3,
       },
       scheduleLineDetails: {
         backgroundColor: '#4A83B7',
         width: 1,
-        height: 120,
-        position: 'relative',
-        left: -3,
+        height: 160,
       },
-      detailsDates: {
-        textAlign: 'right',
-        width: 100,
-        minWidth: 100,
-        // text-align: right;
-        // display: flex;
-        flexDirection: 'column',
-        justifyContent: 'center'
+      detailsCountry: {
+        textTransform: 'uppercase',
       },
       placeText: {
         color: '#707070'
       },
+      boldText: {
+        fontWeight: '800'
+      },
       mainText: {
-        color: '#4A83B7'
+        color: '#4A83B7',
+      },
+      dateWrapper: {
+        flexDirection: 'row',
       },
       dateText: {
-        color: '#707070'
+        color: '#707070',
+        textAlign: 'right'
       },
       greyText: {
-        color: '#BFBFBF'
+        color: '#BFBFBF',
+        // flexDirection: 'row',
+        textAlign: 'right',
       },
   });
