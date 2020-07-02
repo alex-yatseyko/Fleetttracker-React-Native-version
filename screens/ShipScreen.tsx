@@ -58,15 +58,10 @@ export const ShipScreen = ({route, navigation}) => {
                 const fetchedFixedObj = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fixedID}`, 'GET', null, {
                     Authorization: `Bearer ${token}`
                 })
-                // console.log(fetchedFixedObj)
-                // console.log([posx / 60000, posy / 60000])
-
                 fetchedFuture['hydra:member'][i]['unlocationcode'] = fetchedFixedObj.unlocationcode
                 fetchedFuture['hydra:member'][i]['countrycode'] = fetchedFixedObj.countrycode
                 fetchedFuture['hydra:member'][i]['name'] = fetchedFixedObj.name
             }
-            
-            // console.log('Future Edited', fetchedFuture['hydra:member'])            
 
             /* Places requests */
 

@@ -129,47 +129,15 @@ export const MapScreen = ({navigation}) => {
       const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
 
       const [locations, setLocations] = useState([{
-        icon: `<div style="margin-top: -20px;">
-        <img style='transform: scale(${scale}) rotate(145deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
-        <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Lviv</div>
-        </div>`,
+        icon: ``,
         position: { lat: 49.841140, lng: 24.026591 },
         name: "Lviv",
-      },
-      {
-        icon: `<div style="margin-top: -20px;"  >
-        <img style='transform: scale(${scale}) rotate(75deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
-        <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Kyiv</div>
-        </div>
-        `,
-        position: { lat: 50.467313, lng: 30.520483 },
-        name: "Kyiv",
       }])
       const [filteredLocations, setFilteredLocations] = useState()
       
       const [loading, setLoading] = useState()
 
       const img = require('../assets/logo.png')
-      const locationsTest: { icon: string; position: LatLng; name: string }[] = [
-        {
-          icon: `<div style="margin-top: -20px;">
-          <img style='transform: scale(${scale}) rotate(145deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
-          <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Lviv</div>
-          </div>`,
-          position: { lat: 49.841140, lng: 24.026591 },
-          name: "Lviv",
-        },
-        // {
-        //   icon: `<div style="margin-top: -20px;"  >
-        //   <img style='transform: scale(${scale}) rotate(75deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
-        //   <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Kyiv</div>
-        //   </div>
-        //   `,
-        //   position: { lat: 50.467313, lng: 30.520483 },
-        //   name: "Kyiv",
-        // }
-      ];
-
 
     const onMessageReceived = (message: WebviewLeafletMessage) => {
         switch (message.event) {
@@ -439,6 +407,7 @@ export const MapScreen = ({navigation}) => {
 
       useEffect(() => {
         console.log(AsyncStorage.getItem('currentLocation'))
+        // setMapCenterPosition()
         getMapData()
       }, [])
 

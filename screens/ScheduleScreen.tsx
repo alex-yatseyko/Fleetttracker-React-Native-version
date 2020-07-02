@@ -4,9 +4,7 @@ import {
     View,
     Text,
     AsyncStorage,
-    TextInput,
-    Image,
-    FlatList
+    Share,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
@@ -23,6 +21,21 @@ export const ScheduleScreen = ({route, navigation}) => {
 
     const { request } = useHttp()
     const token = AsyncStorage.getItem('Token')
+
+    const onShare = async () => {
+        try {
+          await Share.share({
+            title: `${agent.name} schedule details`,
+            message:
+            //   'Test Let me share this text with other apps',
+            `Company Name: ${agent.name},\nAddress:${agent.address1 ? agent.address1 : ' No address'},\nPhone:${agent.phone}, \nAgent Name: ${agent.contact}, \nEmail: ${agent.email}`
+            //   `Agent Name:'agent.name} schedule details&body=Address:${agent.address1 ? agent.address1 : ' No address'}, Phone:${agent.phone}, Agent Name: ${agent.contact}, Email: ${agent.email}`
+          });
+    
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
 
     const getSchedule = useCallback( async () => {
         const token = await AsyncStorage.getItem('Token')
@@ -59,7 +72,10 @@ export const ScheduleScreen = ({route, navigation}) => {
                 <Text style={styles.headerTitle}>{ agent.city ? `${agent.city},` : ''} {agent.country}</Text>
                 
                 <TouchableWithoutFeedback
-                    onPress={() => console.log('Share')}
+                    onPress={() => {
+                        // console.log('Share')
+                        onShare()
+                    }}
                 >
                     <Icon name="reply" style={styles.rightIcon} />
                 </TouchableWithoutFeedback>

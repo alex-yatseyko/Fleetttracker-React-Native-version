@@ -18,175 +18,177 @@ import { ScheduleScreen } from './ScheduleScreen'
 
 
 
-const list = [
-    {
-        name: 'MV TURTOISE',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-]
-
 export const ListScreen = ({navigation}) => {
     const [ search, setSearch ] = useState([])
     const [ filteredList, setFilteredList ] = useState([])
     const [ list, setList ] = useState([])
+
+
+// const list = [
+//     {
+//         name: 'MV TURTOISE',
+//         capt: 'Capt A.Kirk',
+//         futureEntries: {
+//             0: {
+//                 date: '12.08',
+//                 name: 'DE HAM'
+//             },
+//             1: {
+//                 date: '20.08',
+//                 name: 'GB LGB'
+//             },
+//             2: {
+//                 date: '27.08',
+//                 name: 'MA MOH'
+//             },
+//         }
+//     },
+//     {
+//         name: 'MV TURTOISE',
+//         capt: 'Capt A.Kirk',
+//         futureEntries: {
+//             0: {
+//                 date: '12.08',
+//                 name: 'DE HAM'
+//             },
+//             1: {
+//                 date: '20.08',
+//                 name: 'GB LGB'
+//             },
+//             2: {
+//                 date: '27.08',
+//                 name: 'MA MOH'
+//             },
+//         }
+//     },
+//     {
+//         name: 'MV TURTOISE',
+//         capt: 'Capt A.Kirk',
+//         futureEntries: {
+//             0: {
+//                 date: '12.08',
+//                 name: 'DE HAM'
+//             },
+//             1: {
+//                 date: '20.08',
+//                 name: 'GB LGB'
+//             },
+//             2: {
+//                 date: '27.08',
+//                 name: 'MA MOH'
+//             },
+//         }
+//     },
+//     {
+//         name: 'MV TURTOISE',
+//         capt: 'Capt A.Kirk',
+//         futureEntries: {
+//             0: {
+//                 date: '12.08',
+//                 name: 'DE HAM'
+//             },
+//             1: {
+//                 date: '20.08',
+//                 name: 'GB LGB'
+//             },
+//             2: {
+//                 date: '27.08',
+//                 name: 'MA MOH'
+//             },
+//         }
+//     },
+//     {
+//         name: 'MV TURTOISE',
+//         capt: 'Capt A.Kirk',
+//         futureEntries: {
+//             0: {
+//                 date: '12.08',
+//                 name: 'DE HAM'
+//             },
+//             1: {
+//                 date: '20.08',
+//                 name: 'GB LGB'
+//             },
+//             2: {
+//                 date: '27.08',
+//                 name: 'MA MOH'
+//             },
+//         }
+//     },
+//     {
+//         name: 'MV TURTOISE',
+//         capt: 'Capt A.Kirk',
+//         futureEntries: {
+//             0: {
+//                 date: '12.08',
+//                 name: 'DE HAM'
+//             },
+//             1: {
+//                 date: '20.08',
+//                 name: 'GB LGB'
+//             },
+//             2: {
+//                 date: '27.08',
+//                 name: 'MA MOH'
+//             },
+//         }
+//     },
+//     {
+//         name: 'MV TURTOISE',
+//         capt: 'Capt A.Kirk',
+//         futureEntries: {
+//             0: {
+//                 date: '12.08',
+//                 name: 'DE HAM'
+//             },
+//             1: {
+//                 date: '20.08',
+//                 name: 'GB LGB'
+//             },
+//             2: {
+//                 date: '27.08',
+//                 name: 'MA MOH'
+//             },
+//         }
+//     },
+//     {
+//         name: 'MV TURTOISE',
+//         capt: 'Capt A.Kirk',
+//         futureEntries: {
+//             0: {
+//                 date: '12.08',
+//                 name: 'DE HAM'
+//             },
+//             1: {
+//                 date: '20.08',
+//                 name: 'GB LGB'
+//             },
+//             2: {
+//                 date: '27.08',
+//                 name: 'MA MOH'
+//             },
+//         }
+//     },
+//     {
+//         name: 'MV TURTOISE',
+//         capt: 'Capt A.Kirk',
+//         futureEntries: {
+//             0: {
+//                 date: '12.08',
+//                 name: 'DE HAM'
+//             },
+//             1: {
+//                 date: '20.08',
+//                 name: 'GB LGB'
+//             },
+//             2: {
+//                 date: '27.08',
+//                 name: 'MA MOH'
+//             },
+//         }
+//     },
+// ]
+
 
     const onFilterList = (e) => {
         setSearch(e.target.value)
@@ -195,11 +197,13 @@ export const ListScreen = ({navigation}) => {
             e.target.value.toLowerCase()) !== -1;
         })
         setFilteredList(updatedList)
-      }
+    }
 
     const getListData = async () => {
-        const ships = await AsyncStorage.getItem('Ships')
-        console.log(ships)
+        const token = await AsyncStorage.getItem('Token')
+        // const ships = JSON.parse( await AsyncStorage.getItem('Ships'))
+        // console.log('Shipe', ships)
+        // console.log('Shipe', JSON.parse(ships))
     }
 
     useEffect(() => {
@@ -215,16 +219,14 @@ export const ListScreen = ({navigation}) => {
                 />
             </View>
         <ScrollView style={styles.scrollSpace}>
-            <Text>List Screen</Text>
-            <TouchableWithoutFeedback
+            {/* <TouchableWithoutFeedback
                 onPress={() => {navigation.navigate('Ship')}}
             >
-                <Text>Hamburg, Germany</Text>
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback> */}
             {
                 list.map(schedule => {
                     return (
-                        <View style={styles.listItem}>
+                        <View style={styles.listItem} key={schedule.name}>
                             <View style={styles.scheduleName}>
                                 <Text>{schedule.name}</Text>
                                 <Text>{schedule.capt}</Text>
@@ -266,8 +268,6 @@ const styles = StyleSheet.create({
     },
     scrollSpace: {
         marginTop: 95,
-        // marginBottom: 300,
-        // paddingBottom: 300,
         height: '100%'
     },
     header: {
