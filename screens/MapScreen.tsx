@@ -94,6 +94,7 @@ export const MapScreen = ({navigation}) => {
           name="Schedule" 
           component={ScheduleScreen}
           options={{ 
+            headerShown: false, 
             title: 'Schedule Location',
             headerBackTitle: '|',
             headerBackTitleStyle: { 
@@ -149,8 +150,6 @@ export const MapScreen = ({navigation}) => {
       const [loading, setLoading] = useState()
 
       const img = require('../assets/logo.png')
-
-      // <img style='transform: scale(${scale}) rotate(145deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
       const locationsTest: { icon: string; position: LatLng; name: string }[] = [
         {
           icon: `<div style="margin-top: -20px;">
@@ -160,16 +159,15 @@ export const MapScreen = ({navigation}) => {
           position: { lat: 49.841140, lng: 24.026591 },
           name: "Lviv",
         },
-        {
-          icon: `<div style="margin-top: -20px;"  >
-          <img style='transform: scale(${scale}) rotate(75deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
-          <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Kyiv</div>
-          </div>
-          `,
-          position: { lat: 50.467313, lng: 30.520483 },
-          name: "Kyiv",
-        }
-    
+        // {
+        //   icon: `<div style="margin-top: -20px;"  >
+        //   <img style='transform: scale(${scale}) rotate(75deg)' src="http://yatseyko.com/wp-content/uploads/2020/04/method-draw-image-2.svg" />
+        //   <div style="text-align: center; margin-top: -24px; background: rgb(255, 255, 255, 0.6)">Kyiv</div>
+        //   </div>
+        //   `,
+        //   position: { lat: 50.467313, lng: 30.520483 },
+        //   name: "Kyiv",
+        // }
       ];
 
 
@@ -440,6 +438,7 @@ export const MapScreen = ({navigation}) => {
       }
 
       useEffect(() => {
+        console.log(AsyncStorage.getItem('currentLocation'))
         getMapData()
       }, [])
 

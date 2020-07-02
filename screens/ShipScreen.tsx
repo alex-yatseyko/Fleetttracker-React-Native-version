@@ -41,6 +41,8 @@ export const ShipScreen = ({route, navigation}) => {
             AsyncStorage.setItem('currentLocation', JSON.stringify(shipLocation))
 
             const scheduleId = fetchedShip['schedules'][0]['@id'].slice(15, 19)
+            // console.log(fetchedShip['schedules'][0])
+            // console.log(scheduleId)
             setIdSchedule(scheduleId)
 
             const fetchedFuture = await request(`https://staging.api.app.fleettracker.de/api/future_schedule_entries?schedule_id=${scheduleId}`, 'GET', null, {
@@ -91,8 +93,6 @@ export const ShipScreen = ({route, navigation}) => {
     }
 
     useEffect(() => {
-        // console.log(data)
-        // console.log(data.slice(11, 15))
         getShip()
     }, [])
 
@@ -103,22 +103,6 @@ export const ShipScreen = ({route, navigation}) => {
             </View>
         )
     }
-
-    const testHeader = `               <View style={styles.header}>
-    <TouchableWithoutFeedback
-        onPress={() => navigation.goBack()}
-    >
-        {/* <Icon name="chevron-left" style={styles.headerIcon} /> */}
-        {/* <Entypo name="chevron-thin-left" style={styles.headerIcon}/> */}
-        <Feather name="chevron-left" style={styles.headerIcon} />
-    </TouchableWithoutFeedback>
-    <Text style={styles.headerTitle}>{data.slice(0, -4)}</Text>
-    <TouchableWithoutFeedback
-        onPress={() => navigation.goBack()}
-    >
-        <Icon name="crosshairs" style={styles.headerIcon} />
-    </TouchableWithoutFeedback>
-</View>`
 
     return(
         <View style={styles.container}>
@@ -131,11 +115,12 @@ export const ShipScreen = ({route, navigation}) => {
                 </TouchableWithoutFeedback>
                 <Text style={styles.headerTitle}>{data.slice(0, -4)}</Text>
                 <TouchableWithoutFeedback
-                    onPress={() => navigation.navigate('Map',
-                        {
-                            current: location
-                        }
-                    )}
+                    style={{opacity: 0}}
+                    // onPress={() => navigation.navigate('Map',
+                    //     {
+                    //         current: location
+                    //     }
+                    // )}
                 >
                     <Icon name="crosshairs" style={styles.rightIcon} />
                 </TouchableWithoutFeedback>
@@ -146,18 +131,20 @@ export const ShipScreen = ({route, navigation}) => {
                             <View key={i['@id']} style={styles.detailsSchedule}>
                                 <TouchableWithoutFeedback
                                     onPress={() => {navigation.navigate('Schedule', {
-                                        scheduleId: idSchedule
+                                        scheduleId: i['@id'].slice(22, 28)
                                     })}}
                                     style={styles.scheduleWrapper}
                                 >
-                                    {/* <Text>{i['name']}</Text> */}
                                     <View style={styles.detailsPlace}>
                                         <Text style={styles.placeText}>{i['countrycode']} {i['unlocationcode']}</Text>
                                         <Text style={styles.mainText}>
-                                            <Text style={styles.boldText}>{i['name']},</Text> 
+                                        {/* {"\n"} */}
+                                            <Text style={styles.boldText}>{i['name']}, </Text> 
                                             <Text style={styles.detailsCountry}>{countries[`${i['countrycode']}`]}</Text>
                                         </Text>
-                                        <Text>{i['portactivities'][0] ? i['portactivities'][0] : 'No data'}{i['portactivities'][1] ?', ' + i['portactivities'][1] : ''}{i['portactivities'][2] ?', ' + i['portactivities'][2] : ''}</Text>
+                                        <Text
+                                            style={styles.activities}
+                                        >{i['portactivities'][0] ? i['portactivities'][0] : 'No data'}{i['portactivities'][1] ?', ' + i['portactivities'][1] : ''}{i['portactivities'][2] ?', \n' + i['portactivities'][2] : ''}</Text>
                                     </View>
                                     <View style={styles.detailsTimeline}>
                                         <View style={styles.circle} />
@@ -231,38 +218,6 @@ const styles = StyleSheet.create({
         color: '#4A83B7',
         fontSize: 33,
       },
-    //   header: {
-    //     backgroundColor: '#fff',
-    //     position: 'absolute',
-    //     width: '100%',
-    //     top: 0,
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-between',
-    //     // justifyContent: 'flex-end',
-    //     alignItems: 'flex-end',
-    //     paddingVertical: 20,
-    //     borderStartColor: '#fff',
-    //     paddingHorizontal: 10,
-    //     // borderBottomWidth: 1,
-    //     shadowColor: "#000",
-    //     shadowOffset: {
-    //         width: 0,
-    //         height: 2,
-    //     },
-    //     shadowOpacity: 0.23,
-    //     shadowRadius: 2.62,
-    //     elevation: 4,
-    //     // height: 60,
-    //     zIndex: 999,
-    // },
-    // headerIcon: {
-    //     fontSize: 44,
-    //     paddingTop: 12,
-    //     color: '#4A83B7',
-    // },
-    // headerHiddenIcon: {
-    //     opacity: 0
-    // },
     headerTitle: {
         fontWeight: '600',
         fontSize: 16,
@@ -324,8 +279,12 @@ const styles = StyleSheet.create({
       placeText: {
         color: '#707070'
       },
+      activities: {
+        textAlign: 'right'
+      },
       boldText: {
-        fontWeight: '800'
+        fontWeight: '800',
+        textAlign: 'right',
       },
       mainText: {
         color: '#4A83B7',

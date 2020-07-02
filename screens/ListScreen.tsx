@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     StyleSheet,
     View,
     Text,
     TextInput,
     ScrollView,
-    Platform 
+    Platform, 
+    AsyncStorage
 } from 'react-native';
 
 import Globals from '../component-library/Globals';
@@ -196,6 +197,15 @@ export const ListScreen = ({navigation}) => {
         setFilteredList(updatedList)
       }
 
+    const getListData = async () => {
+        const ships = await AsyncStorage.getItem('Ships')
+        console.log(ships)
+    }
+
+    useEffect(() => {
+        getListData()
+    }, [])
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -252,6 +262,7 @@ export const ListScreen = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         marginBottom: 100,
+        backgroundColor: '#fff'
     },
     scrollSpace: {
         marginTop: 95,

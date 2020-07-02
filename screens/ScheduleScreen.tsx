@@ -1,4 +1,4 @@
-import React, { useState , useEffect, useContext} from 'react';
+import React, { useState , useEffect, useContext, useCallback } from 'react';
 import { 
     StyleSheet,
     View,
@@ -9,6 +9,7 @@ import {
     FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Feather from 'react-native-vector-icons/Feather';
 import IconOld from 'react-native-vector-icons/FontAwesome';
 import { useHttp } from '../services/utility/http.hook'
 
@@ -21,88 +22,160 @@ export const ScheduleScreen = ({route, navigation}) => {
     const [ agent, setAgent ] = useState([])
 
     const { request } = useHttp()
+    const token = AsyncStorage.getItem('Token')
 
-    const getSchedule = async () => {
+    const getSchedule = useCallback( async () => {
         const token = await AsyncStorage.getItem('Token')
-        const scheduleId = route.params.scheduleId   
+        const scheduleId = JSON.parse(route.params.scheduleId)
         try {
             const fetchedSchedule = await request(`https://staging.api.app.fleettracker.de/api/schedule_entries/${scheduleId}`, 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
-            console.log(fetchedSchedule)
+            // console.log(fetchedSchedule)
             setSchedule(fetchedSchedule)
 
             const fetchedAgent = await request(`https://staging.api.app.fleettracker.de/api/schedule_agents/${fetchedSchedule.scheduleagentid}`, 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
-            console.log(fetchedAgent)
+            // console.log(fetchedAgent)
             setAgent(fetchedAgent)
 
             // setLoadingScreen(false)
         } catch(e) {}
-    }
+    }, [request])
 
     useEffect(() => {
         getSchedule()
-        // console.log(agent)
-    }, [getSchedule])
+    }, [])
 
     return(
-    <View style={styles.settings}>
-            <View style={styles.listItem}>
-                <View style={styles.listIcon}>
-                    <IconOld name="user" style={styles.scheduleIcon} />
-                </View>
-                <Text style={styles.mediumText}>Mallorca</Text>
+    <View style={styles.container}>
+             <View style={styles.header}>
+                <TouchableWithoutFeedback
+                    onPress={() => navigation.goBack()}
+                >
+                    <Feather name="chevron-left" style={styles.leftIcon} />
+                </TouchableWithoutFeedback>
+                <Text style={styles.headerTitle}>{ agent.city ? `${agent.city},` : ''} {agent.country}</Text>
+                
+                <TouchableWithoutFeedback
+                    onPress={() => console.log('Share')}
+                >
+                    <Icon name="reply" style={styles.rightIcon} />
+                </TouchableWithoutFeedback>
             </View>
-            {/* <Text>{route.params.scheduleId}</Text> */}
-            <View style={styles.listItem}>
-                <View style={styles.listIcon}>
-                    <Icon name="home" style={styles.scheduleIcon} />
+            <View style={styles.listWrapper}>
+                {agent.name ?
+                <View style={styles.listItem}>
+                    <View style={styles.listIcon}>
+                        <IconOld name="user" style={styles.scheduleIcon} />
+                    </View>
+                    <Text style={styles.mediumText}>{agent.name}</Text>
                 </View>
-                <Text style={styles.mediumText}>Mallorca</Text>
-            </View>
+                : null }
 
-            <View style={styles.listItem}>
-                <View style={styles.listIcon}>
-                    <Icon name="phone" style={styles.scheduleIcon} />
+                {agent.address1 ?
+                <View style={styles.listItem}>
+                    <View style={styles.listIcon}>
+                        <Icon name="home" style={styles.scheduleIcon} />
+                    </View>
+                    <Text style={styles.mediumText}>{agent.address1}</Text>
                 </View>
-                <Text style={styles.mediumText}>Mallorca</Text>
-            </View>
+                : null }
 
-            <View style={styles.listItem}>
-                <View style={styles.listIcon}>
-                    <Icon name="fax" style={styles.scheduleIcon} />
+                {agent.phone2 ? 
+                <View style={styles.listItem}>
+                    <View style={styles.listIcon}>
+                        <Icon name="phone" style={styles.scheduleIcon} />
+                    </View>
+                    <Text style={styles.mediumText}>{agent.phone2}</Text>
                 </View>
-                <Text style={styles.mediumText}>Mallorca</Text>
-            </View>
+                : null }
 
-            <View style={styles.listItem}>
-                <View style={styles.listIcon}>
-                    <Icon name="mobile-alt" style={styles.scheduleIcon} />
+                {agent.mobile ? 
+                <View style={styles.listItem}>
+                    <View style={styles.listIcon}>
+                        <Icon name="fax" style={styles.scheduleIcon} />
+                    </View>
+                    <Text style={styles.mediumText}>{agent.mobile}</Text>
                 </View>
-                <Text style={styles.mediumText}>Mallorca</Text>
-            </View>
+                : null}
 
-            <View style={styles.listItem}>
-                <View style={styles.listIcon}>
-                    <IconOld name="envelope" style={styles.scheduleIcon} />
+                {agent.mobile2 ? 
+                <View style={styles.listItem}>
+                    <View style={styles.listIcon}>
+                        <Icon name="mobile-alt" style={styles.scheduleIcon} />
+                    </View>
+                    <Text style={styles.mediumText}>{agent.mobile2}</Text>
+                </View> 
+                : null }
+
+                {agent.email ?
+                <View style={styles.listItem}>
+                    <View style={styles.listIcon}>
+                        <IconOld name="envelope" style={styles.scheduleIcon} />
+                    </View>
+                    <Text style={styles.mediumText}>{agent.email}</Text>
                 </View>
-                <Text style={styles.mediumText}>Mallorca</Text>
+                : null }
             </View>
     </View>
     )
 }
 
 const styles = StyleSheet.create({
-    settings: {
+    container: {
         // alignItems: 'center',
         justifyContent: 'space-evenly',
         flex: 1,
-        // paddingTop: 200,
+        backgroundColor: '#fff',
+        paddingTop: 60,
         // padding: 20
-        paddingLeft: 40
+        // paddingLeft: 40
       },
+      header: {
+        paddingTop: 20,
+        zIndex: 99,
+        backgroundColor: '#fff',
+        position: 'absolute',
+        width: '100%',
+        top: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        height: 80,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
+      },
+      rightIcon: {
+        color: '#4A83B7',
+        fontSize: 23,
+        transform: [{rotateY: '180deg'}]
+      },
+      leftIcon: {
+        color: '#4A83B7',
+        fontSize: 33,
+      },
+    headerTitle: {
+        fontWeight: '600',
+        fontSize: 16,
+        color: '#333',
+        textTransform: 'uppercase'
+    },
+    listWrapper: {
+        justifyContent: 'space-evenly',
+        flex: 1,
+        backgroundColor: '#fff',
+        paddingLeft: 50,
+        paddingRight: 120,
+    },
       scheduleIcon: {
           fontSize: 30,
           color: '#4A83B7',
