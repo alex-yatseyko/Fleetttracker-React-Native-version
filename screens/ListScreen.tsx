@@ -200,10 +200,21 @@ export const ListScreen = ({navigation}) => {
     }
 
     const getListData = async () => {
-        const token = await AsyncStorage.getItem('Token')
-        // const ships = JSON.parse( await AsyncStorage.getItem('Ships'))
+        try {   
+            const ships = await AsyncStorage.getItem('Ships')
+            console.log('Ships',ships)
+        } catch(e) {
+            console.log('List Error')
+        }
+        // const token = await AsyncStorage.getItem('Token')
+        // console.log('LIst token', token)
+
+        // const ships = await AsyncStorage.getItem('Ships')
+
         // console.log('Shipe', ships)
-        // console.log('Shipe', JSON.parse(ships))
+        // // console.log('Shipe', JSON.parse(ships))
+        // console.log(JSON.parse(ships))
+        
     }
 
     useEffect(() => {

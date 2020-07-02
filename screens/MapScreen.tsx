@@ -385,7 +385,6 @@ export const MapScreen = ({navigation}) => {
                       ]
                   }
                   fetchedFuture.push(fetchedSchedule)
-                  // console.log(e)
 
                   AsyncStorage.setItem('Ships', JSON.stringify(fetched['hydra:member']))
                   AsyncStorage.setItem('ShipsIds', JSON.stringify(fetchedShipIds))
@@ -393,12 +392,11 @@ export const MapScreen = ({navigation}) => {
 
                   setLocations(fetched['hydra:member'])
                   setFilteredLocations(fetched['hydra:member'])
-                  setLoading(false)
               }
           }
 
           for(let k = 0; k < fetched['hydra:member'].length; k++) {
-              fetched['hydra:member'][k]['future'] = fetchedFuture[k]
+            fetched['hydra:member'][k]['future'] = fetchedFuture[k]
           }         
         } catch(e) {
           console.log(e)
