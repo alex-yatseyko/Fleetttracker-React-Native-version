@@ -200,9 +200,12 @@ export const ListScreen = ({navigation}) => {
     }
 
     const getListData = async () => {
-        try {   
-            const ships = await AsyncStorage.getItem('Ships')
-            console.log('Ships',ships)
+        try {
+            // const ships = await AsyncStorage.getItem('Ships')
+            // console.log('Ships', ships)
+            const data = JSON.parse(await AsyncStorage.getItem('Ships'))
+            console.log('Test', data)
+            // console.log('Shipe', JSON.parse(ships))
         } catch(e) {
             console.log('List Error')
         }

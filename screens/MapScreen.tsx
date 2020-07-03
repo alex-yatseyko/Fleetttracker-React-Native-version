@@ -386,7 +386,9 @@ export const MapScreen = ({navigation}) => {
                   }
                   fetchedFuture.push(fetchedSchedule)
 
-                  AsyncStorage.setItem('Ships', JSON.stringify(fetched['hydra:member']))
+                  const test = JSON.stringify(fetched['hydra:member'])
+
+                  AsyncStorage.setItem('Ships', test)
                   AsyncStorage.setItem('ShipsIds', JSON.stringify(fetchedShipIds))
                   AsyncStorage.setItem('ScheduleIds', JSON.stringify(fetchedScheduleIds))
 
