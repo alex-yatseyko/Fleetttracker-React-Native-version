@@ -4,6 +4,8 @@ function noop() {}
 
 export const AppContext = createContext({ 
     lang: 'en',
-    ships: [],
     loadShips: noop,
+    ships: [],
+    loadSchedules: noop,
+    schedules: null,
 });

@@ -39,9 +39,10 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const {
-    lang,
     ships, 
-    loadShips
+    loadShips,
+    schedules, 
+    loadSchedules,
   } = useAppContext()
 
   return (
@@ -49,14 +50,11 @@ export default function App() {
 
     // <AppContext.Provider>
     <AppContext.Provider value={{ 
-      lang: 'fr',
       ships,
       loadShips,
+      schedules, 
+      loadSchedules,
     }}>
-
-    {/* <AuthContext.Provider value={{
-      token, login, logout, refresh_token, isAuthenticated
-    }}> */}
       <NavigationContainer>           
         <View style={styles.container}>
         <Stack.Navigator 

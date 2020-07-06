@@ -33,26 +33,20 @@ export const ShipScreen = ({route, navigation}) => {
             const fetchedShipLatestPosition = await request(`https://staging.api.app.fleettracker.de/api/ships/${shipId}/latest_position`, 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
-            // console.log(fetchedShip)
-            // console.log(fetchedShipLatestPosition)
 
             const shipLocation:any = [fetchedShipLatestPosition.posy / 60000, fetchedShipLatestPosition.posx / 60000]
             setLocation(shipLocation)
             AsyncStorage.setItem('currentLocation', JSON.stringify(shipLocation))
 
             const scheduleId = fetchedShip['schedules'][0]['@id'].slice(15, 19)
-            // console.log(fetchedShip['schedules'][0])
-            // console.log(scheduleId)
             setIdSchedule(scheduleId)
 
             const fetchedFuture = await request(`https://staging.api.app.fleettracker.de/api/future_schedule_entries?schedule_id=${scheduleId}`, 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
-            // console.log('Future', fetchedFuture['hydra:member'])
 
-                        /* Places requests */
-            let i
-            for (i = 0; i < fetchedFuture['hydra:member'].length; i++) {
+            /* Places requests */
+            for (let i = 0; i < fetchedFuture['hydra:member'].length; i++) {
                 let fixedID = fetchedFuture['hydra:member'][i]['fixedObject'].slice(19, 24) 
 
                 const fetchedFixedObj = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fixedID}`, 'GET', null, {
@@ -71,8 +65,6 @@ export const ShipScreen = ({route, navigation}) => {
                 const fetchedFixedObj = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fixedID}`, 'GET', null, {
                     Authorization: `Bearer ${token}`
                 })
-                // console.log(fetchedFixedObj)
-                // console.log([posx / 60000, posy / 60000])
 
                 fetchedFuture['hydra:member'][i]['unlocationcode'] = fetchedFixedObj.unlocationcode
                 fetchedFuture['hydra:member'][i]['countrycode'] = fetchedFixedObj.countrycode
@@ -134,7 +126,7 @@ export const ShipScreen = ({route, navigation}) => {
                                         <Text style={styles.placeText}>{i['countrycode']} {i['unlocationcode']}</Text>
                                         <Text style={styles.mainText}>
                                         {/* {"\n"} */}
-                                            <Text style={styles.boldText}>{i['name']}, </Text> 
+                                            <Text style={styles.boldText}>{i['name']},{"\n"} </Text> 
                                             <Text style={styles.detailsCountry}>{countries[`${i['countrycode']}`]}</Text>
                                         </Text>
                                         <Text

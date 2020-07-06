@@ -36,7 +36,8 @@ import {
   import Config from "react-native-config";
 
   // import { rootReducer } from '../redux/rootReducer'
-  import { authReducer } from '../redux/authReducer'
+  // import { authReducer } from '../redux/authReducer'
+
   import { AppContext } from '../context/AppContext'
 
   const axios = require('axios');
@@ -48,9 +49,7 @@ import {
   // Get the positions from api/ships/{id}/latest_postition
 
   const Stack = createStackNavigator();
-
-
-  const icon = `<svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="40" height="40"><defs><path d="M320.8 7.2L501.6 640L140 640L320.8 7.2Z" id="b1OuTbAhqc"></path></defs><g><g><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill="#fefe02" fill-opacity="1"></use><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="14" stroke-opacity="1"></use></g></g></g></g></svg>`
+  // const icon = `<svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="40" height="40"><defs><path d="M320.8 7.2L501.6 640L140 640L320.8 7.2Z" id="b1OuTbAhqc"></path></defs><g><g><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill="#fefe02" fill-opacity="1"></use><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="14" stroke-opacity="1"></use></g></g></g></g></svg>`
   const scale = .6;
 
 // const getDuration = (): number => Math.floor(Math.random() * 3) + 1;
@@ -116,6 +115,7 @@ export const MapScreen = ({navigation}) => {
       const [search, setSearch ] = useState([])
       const [ownPosition, setOwnPosition] = useState(null);
       const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
+      const [scheduleIds, setScheduleIds] = useState()
 
       const [locations, setLocations] = useState([{
         icon: ``,
@@ -170,7 +170,7 @@ export const MapScreen = ({navigation}) => {
       // const onIncrement={() => store.dispatch({ type: 'INCREMENT' })}
 
       const { error, request } = useHttp()
-      const conte = useContext(AppContext)
+      const context = useContext(AppContext)
 
       const getMapData = async () => {
         const token = await AsyncStorage.getItem('Token')
@@ -201,20 +201,17 @@ export const MapScreen = ({navigation}) => {
                         "name": `${item['name']}${idKey}`,
                       })
                     }
-                    // console.log(data)
               
                     // Loop for getting ids
                     fetched['hydra:member'].forEach(getIds)
-          // console.log(fetchedShipIds) // Ids
+                    setScheduleIds(fetchedScheduleIds)
 
-          // console.log(data)
 
           for(let i = 0; i < fetchedShipIds.length; i++) {
               const _id = fetchedShipIds[i]
               let fetchedDetails = await request(`https://staging.api.app.fleettracker.de/api/ships/${_id}/latest_position`, 'GET', null, {
                 Authorization: `Bearer ${token}`
               })
-              // console.log(fetchedCapt)
               if(fetchedDetails == null) {
                 fetchedDetails = ''
               }
@@ -232,9 +229,8 @@ export const MapScreen = ({navigation}) => {
                 
               }
           }
-          
-          conte.loadShips(fetched)
-      
+          context.loadShips(fetched)
+
           if(data) {
             setLocations(data)
           }
@@ -244,22 +240,121 @@ export const MapScreen = ({navigation}) => {
         }
       }
 
-    
+      const getListData = async () => {
+        const token = await AsyncStorage.getItem('Token')
+        if(scheduleIds) {
+          try { 
+            let fetchedFuture = []
+            for(let j = 0; j < scheduleIds.length; j++) {
+                const _id = scheduleIds[j]
+                try{
+                    let fetchedSchedule = await request(`https://staging.api.app.fleettracker.de/api/future_schedule_entries?schedule_id=${_id}`, 'GET', null, {
+                        Authorization: `Bearer ${token}`
+                    })
+                    if(fetchedSchedule === undefined) {
+                        console.log('Test')
+                    }
+                    if(fetchedSchedule['hydra:member'].length === 1){
+                        fetchedSchedule = {
+                            'hydra:member': [
+                                { etd: fetchedSchedule['hydra:member'][0]['eta'], foid: fetchedSchedule['hydra:member'][0]['foid']},
+                                { eta: 'No data', etd: 'No data' },
+                                { eta: 'No data', etd: 'No data' }
+                            ]
+                        }
+                    }
+                    if(fetchedSchedule['hydra:member'].length === 2){                         
+                        fetchedSchedule = {
+                            'hydra:member': [
+                                { etd: fetchedSchedule['hydra:member'][0]['eta'], foid: fetchedSchedule['hydra:member'][0]['foid']},
+                                { etd: fetchedSchedule['hydra:member'][1]['eta'], foid: fetchedSchedule['hydra:member'][1]['foid']},
+                                { eta: 'No data', etd: 'No data' }
+                            ]
+                        }
+                    }
+                    if(fetchedSchedule['hydra:totalItems'] === 0) {
+                        fetchedSchedule = {
+                            'hydra:member': [
+                                { eta: 'No data', etd: 'No data' },
+                                { eta: 'No data', etd: 'No data' },
+                                { eta: 'No data', etd: 'No data' }
+                            ]
+                        }
+                    }
+
+                    if(fetchedSchedule['hydra:member'][0]['foid']) {
+                        let obj1 = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fetchedSchedule['hydra:member'][0]['foid']}`, 'GET', null, {
+                            Authorization: `Bearer ${token}`
+                        })
+                        fetchedSchedule['hydra:member'][0]['countrycode'] = obj1['countrycode']
+                        fetchedSchedule['hydra:member'][0]['unlocationcode'] = obj1['unlocationcode']
+                    }
+                    if(fetchedSchedule['hydra:member'][1]['foid']) {
+                        let obj1 = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fetchedSchedule['hydra:member'][1]['foid']}`, 'GET', null, {
+                            Authorization: `Bearer ${token}`
+                        })
+                        fetchedSchedule['hydra:member'][1]['countrycode'] = obj1['countrycode']
+                        fetchedSchedule['hydra:member'][1]['unlocationcode'] = obj1['unlocationcode']
+                    }
+                    if(fetchedSchedule['hydra:member'][2]['foid']) {
+                        let obj1 = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fetchedSchedule['hydra:member'][2]['foid']}`, 'GET', null, {
+                            Authorization: `Bearer ${token}`
+                        })
+                        fetchedSchedule['hydra:member'][2]['countrycode'] = obj1['countrycode']
+                        fetchedSchedule['hydra:member'][2]['unlocationcode'] = obj1['unlocationcode']
+                    }
+
+                    // console.log(fetchedSchedule)
+
+                    fetchedFuture.push(fetchedSchedule)
+                    
+                } catch(e) {
+                    const fetchedSchedule = {
+                        'hydra:member': [
+                            { eta: 'No data', etd: 'No data' },
+                            { eta: 'No data', etd: 'No data' },
+                            { eta: 'No data', etd: 'No data' },
+                        ]
+                    }
+                    fetchedFuture.push(fetchedSchedule)
+                }
+            }
+
+            // console.log('Future test', fetchedFuture)
+            // console.log(fetchedFuture)
+            context.loadSchedules(fetchedFuture)
+            console.log(context.schedules)
+            // console.log(context.loadSchedules)
+
+          } catch(e) {
+            console.log(e)
+          }
+        }
+        // scheduleIds ? 
+        // console.log('works') 
+
+        // : null
+ 
+      }
 
       useEffect(() => {
-        console.log(AsyncStorage.getItem('currentLocation'))
+        // console.log('Location', AsyncStorage.getItem('currentLocation'))
         // setMapCenterPosition()
         getMapData()
-       
+        // getListData()
+
+        // setTimeout(() => {
+        //   getListData()
+        // }, 10000)
       }, [])
 
-      // const auth = useContext(AuthContext)
-      
-      // const testdata = 'test'
+      useEffect(() => {
+        // console.log('test')
+        getListData()
+      }, [scheduleIds])
 
       return (
           <View style={{ height: '100%' }}>
-              
               <TouchableHighlight
                 style={styles.refresh}
                 onPress={() => {
@@ -270,7 +365,6 @@ export const MapScreen = ({navigation}) => {
                 <Icon name='refresh' style={styles.refreshIcon} />
               </TouchableHighlight>
               <View style={styles.header}>
-                  {/* <Text>{conte.lang}</Text> */}
                   <TextInput 
                     style={styles.headerInput}
                     textContentType="name"
@@ -280,7 +374,6 @@ export const MapScreen = ({navigation}) => {
                   <TouchableWithoutFeedback
                     onPress={() => {
                       navigation.navigate('List')
-                      // conte.loadShips(testdata)
                     }}
                   >
                     <View style={styles.headerButtonWrapper}>
