@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
     StyleSheet,
     View,
@@ -16,208 +16,191 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { ShipScreen } from './ShipScreen'
 import { ScheduleScreen } from './ScheduleScreen'
 
-
+import { AppContext } from '../context/AppContext'
 
 export const ListScreen = ({navigation}) => {
     const [ search, setSearch ] = useState([])
     const [ filteredList, setFilteredList ] = useState([])
-    const [ list, setList ] = useState([])
+    // const [ list, setList ] = useState([])
 
+    const context = useContext(AppContext)
 
-// const list = [
-//     {
-//         name: 'MV TURTOISE',
-//         capt: 'Capt A.Kirk',
-//         futureEntries: {
-//             0: {
-//                 date: '12.08',
-//                 name: 'DE HAM'
-//             },
-//             1: {
-//                 date: '20.08',
-//                 name: 'GB LGB'
-//             },
-//             2: {
-//                 date: '27.08',
-//                 name: 'MA MOH'
-//             },
-//         }
-//     },
-//     {
-//         name: 'MV TURTOISE',
-//         capt: 'Capt A.Kirk',
-//         futureEntries: {
-//             0: {
-//                 date: '12.08',
-//                 name: 'DE HAM'
-//             },
-//             1: {
-//                 date: '20.08',
-//                 name: 'GB LGB'
-//             },
-//             2: {
-//                 date: '27.08',
-//                 name: 'MA MOH'
-//             },
-//         }
-//     },
-//     {
-//         name: 'MV TURTOISE',
-//         capt: 'Capt A.Kirk',
-//         futureEntries: {
-//             0: {
-//                 date: '12.08',
-//                 name: 'DE HAM'
-//             },
-//             1: {
-//                 date: '20.08',
-//                 name: 'GB LGB'
-//             },
-//             2: {
-//                 date: '27.08',
-//                 name: 'MA MOH'
-//             },
-//         }
-//     },
-//     {
-//         name: 'MV TURTOISE',
-//         capt: 'Capt A.Kirk',
-//         futureEntries: {
-//             0: {
-//                 date: '12.08',
-//                 name: 'DE HAM'
-//             },
-//             1: {
-//                 date: '20.08',
-//                 name: 'GB LGB'
-//             },
-//             2: {
-//                 date: '27.08',
-//                 name: 'MA MOH'
-//             },
-//         }
-//     },
-//     {
-//         name: 'MV TURTOISE',
-//         capt: 'Capt A.Kirk',
-//         futureEntries: {
-//             0: {
-//                 date: '12.08',
-//                 name: 'DE HAM'
-//             },
-//             1: {
-//                 date: '20.08',
-//                 name: 'GB LGB'
-//             },
-//             2: {
-//                 date: '27.08',
-//                 name: 'MA MOH'
-//             },
-//         }
-//     },
-//     {
-//         name: 'MV TURTOISE',
-//         capt: 'Capt A.Kirk',
-//         futureEntries: {
-//             0: {
-//                 date: '12.08',
-//                 name: 'DE HAM'
-//             },
-//             1: {
-//                 date: '20.08',
-//                 name: 'GB LGB'
-//             },
-//             2: {
-//                 date: '27.08',
-//                 name: 'MA MOH'
-//             },
-//         }
-//     },
-//     {
-//         name: 'MV TURTOISE',
-//         capt: 'Capt A.Kirk',
-//         futureEntries: {
-//             0: {
-//                 date: '12.08',
-//                 name: 'DE HAM'
-//             },
-//             1: {
-//                 date: '20.08',
-//                 name: 'GB LGB'
-//             },
-//             2: {
-//                 date: '27.08',
-//                 name: 'MA MOH'
-//             },
-//         }
-//     },
-//     {
-//         name: 'MV TURTOISE',
-//         capt: 'Capt A.Kirk',
-//         futureEntries: {
-//             0: {
-//                 date: '12.08',
-//                 name: 'DE HAM'
-//             },
-//             1: {
-//                 date: '20.08',
-//                 name: 'GB LGB'
-//             },
-//             2: {
-//                 date: '27.08',
-//                 name: 'MA MOH'
-//             },
-//         }
-//     },
-//     {
-//         name: 'MV TURTOISE',
-//         capt: 'Capt A.Kirk',
-//         futureEntries: {
-//             0: {
-//                 date: '12.08',
-//                 name: 'DE HAM'
-//             },
-//             1: {
-//                 date: '20.08',
-//                 name: 'GB LGB'
-//             },
-//             2: {
-//                 date: '27.08',
-//                 name: 'MA MOH'
-//             },
-//         }
-//     },
-// ]
+const list = [
+    {
+        name: 'MV TURTOISE 1',
+        capt: 'Capt A.Kirk',
+        futureEntries: {
+            0: {
+                date: '12.08',
+                name: 'DE HAM'
+            },
+            1: {
+                date: '20.08',
+                name: 'GB LGB'
+            },
+            2: {
+                date: '27.08',
+                name: 'MA MOH'
+            },
+        }
+    },
+    {
+        name: 'MV TURTOISE 2',
+        capt: 'Capt A.Kirk',
+        futureEntries: {
+            0: {
+                date: '12.08',
+                name: 'DE HAM'
+            },
+            1: {
+                date: '20.08',
+                name: 'GB LGB'
+            },
+            2: {
+                date: '27.08',
+                name: 'MA MOH'
+            },
+        }
+    },
+    {
+        name: 'MV TURTOISE 3',
+        capt: 'Capt A.Kirk',
+        futureEntries: {
+            0: {
+                date: '12.08',
+                name: 'DE HAM'
+            },
+            1: {
+                date: '20.08',
+                name: 'GB LGB'
+            },
+            2: {
+                date: '27.08',
+                name: 'MA MOH'
+            },
+        }
+    },
+    {
+        name: 'MV TURTOISE 4',
+        capt: 'Capt A.Kirk',
+        futureEntries: {
+            0: {
+                date: '12.08',
+                name: 'DE HAM'
+            },
+            1: {
+                date: '20.08',
+                name: 'GB LGB'
+            },
+            2: {
+                date: '27.08',
+                name: 'MA MOH'
+            },
+        }
+    },
+    {
+        name: 'MV TURTOISE 5',
+        capt: 'Capt A.Kirk',
+        futureEntries: {
+            0: {
+                date: '12.08',
+                name: 'DE HAM'
+            },
+            1: {
+                date: '20.08',
+                name: 'GB LGB'
+            },
+            2: {
+                date: '27.08',
+                name: 'MA MOH'
+            },
+        }
+    },
+    {
+        name: 'MV TURTOISE 6',
+        capt: 'Capt A.Kirk',
+        futureEntries: {
+            0: {
+                date: '12.08',
+                name: 'DE HAM'
+            },
+            1: {
+                date: '20.08',
+                name: 'GB LGB'
+            },
+            2: {
+                date: '27.08',
+                name: 'MA MOH'
+            },
+        }
+    },
+    {
+        name: 'MV TURTOISE 7',
+        capt: 'Capt A.Kirk',
+        futureEntries: {
+            0: {
+                date: '12.08',
+                name: 'DE HAM'
+            },
+            1: {
+                date: '20.08',
+                name: 'GB LGB'
+            },
+            2: {
+                date: '27.08',
+                name: 'MA MOH'
+            },
+        }
+    },
+    {
+        name: 'MV TURTOISE 8',
+        capt: 'Capt A.Kirk',
+        futureEntries: {
+            0: {
+                date: '12.08',
+                name: 'DE HAM'
+            },
+            1: {
+                date: '20.08',
+                name: 'GB LGB'
+            },
+            2: {
+                date: '27.08',
+                name: 'MA MOH'
+            },
+        }
+    },
+    {
+        name: 'MV TURTOISE 9',
+        capt: 'Capt A.Kirk',
+        futureEntries: {
+            0: {
+                date: '12.08',
+                name: 'DE HAM'
+            },
+            1: {
+                date: '20.08',
+                name: 'GB LGB'
+            },
+            2: {
+                date: '27.08',
+                name: 'MA MOH'
+            },
+        }
+    },
+]
 
 
     const onFilterList = (e) => {
-        setSearch(e.target.value)
-        let updatedList = markers.filter((i) => {
-          return i.name.toLowerCase().search(
-            e.target.value.toLowerCase()) !== -1;
-        })
-        setFilteredList(updatedList)
+
     }
 
     const getListData = async () => {
         try {
-            // const ships = await AsyncStorage.getItem('Ships')
-            // console.log('Ships', ships)
-            const data = JSON.parse(await AsyncStorage.getItem('Ships'))
-            console.log('Test', data)
-            // console.log('Shipe', JSON.parse(ships))
+            console.log('ShipsOnList', context.ships)
         } catch(e) {
             console.log('List Error')
         }
-        // const token = await AsyncStorage.getItem('Token')
-        // console.log('LIst token', token)
-
-        // const ships = await AsyncStorage.getItem('Ships')
-
-        // console.log('Shipe', ships)
-        // // console.log('Shipe', JSON.parse(ships))
-        // console.log(JSON.parse(ships))
-        
     }
 
     useEffect(() => {
@@ -232,45 +215,43 @@ export const ListScreen = ({navigation}) => {
                     placeholder="Search Vessel or Ship Group..." 
                 />
             </View>
-        <ScrollView style={styles.scrollSpace}>
-            {/* <TouchableWithoutFeedback
-                onPress={() => {navigation.navigate('Ship')}}
-            >
-            </TouchableWithoutFeedback> */}
-            {
-                list.map(schedule => {
-                    return (
-                        <View style={styles.listItem} key={schedule.name}>
-                            <View style={styles.scheduleName}>
-                                <Text>{schedule.name}</Text>
-                                <Text>{schedule.capt}</Text>
-                            </View>
-                            <View style={styles.scheduleFuture}>
-                                <View style={styles.scheduleFutureItem}>
-                                    <Text style={styles.centerText}>{schedule.futureEntries[0].date}</Text>
-                                    <View style={styles.circle} />
-                                    {/* <View style={styles.line} /> */}
-                                    <Text style={styles.centerText}>{schedule.futureEntries[0].name}</Text>
+            <ScrollView style={styles.scrollSpace}>
+                {
+                    list.map(schedule => {
+                        return (
+                            <TouchableWithoutFeedback
+                                onPress={() => {navigation.navigate('Ship')}}
+                                key={schedule.name}
+                            >
+                            <View style={styles.listItem} key={schedule.name}>
+                                <View style={styles.scheduleName}>
+                                    <Text>{schedule.name}</Text>
+                                    <Text>{schedule.capt}</Text>
                                 </View>
-                                <View style={styles.scheduleFutureItem}>
-                                    <Text style={styles.centerText}>{schedule.futureEntries[1].date}</Text>
-                                    <View style={styles.circle} />
-                                    {/* <View style={styles.line} /> */}
-                                    <Text style={styles.centerText}>{schedule.futureEntries[1].name}</Text>
+                                <View style={styles.scheduleFuture}>
+                                    <View style={styles.scheduleFutureItem}>
+                                        <Text style={styles.centerText}>{schedule.futureEntries[0].date}</Text>
+                                        <View style={styles.circle} />
+                                        <Text style={styles.centerText}>{schedule.futureEntries[0].name}</Text>
+                                    </View>
+                                    <View style={styles.scheduleFutureItem}>
+                                        <Text style={styles.centerText}>{schedule.futureEntries[1].date}</Text>
+                                        <View style={styles.circle} />
+                                        <Text style={styles.centerText}>{schedule.futureEntries[1].name}</Text>
+                                    </View>
+                                    <View style={styles.scheduleFutureItem}>
+                                        <Text style={styles.centerText}>{schedule.futureEntries[2].date}</Text>
+                                        <View style={styles.circle} />
+                                        <Text style={styles.centerText}>{schedule.futureEntries[2].name}</Text>
+                                    </View>
+                                    <View style={styles.line} />
                                 </View>
-                                <View style={styles.scheduleFutureItem}>
-                                    <Text style={styles.centerText}>{schedule.futureEntries[2].date}</Text>
-                                    <View style={styles.circle} />
-                                    {/* <View style={styles.line} /> */}
-                                    <Text style={styles.centerText}>{schedule.futureEntries[2].name}</Text>
-                                </View>
-                                <View style={styles.line} />
-                            </View>
-                        </View> 
-                    )
-                })
-            }
-        </ScrollView>
+                            </View> 
+                            </TouchableWithoutFeedback> 
+                        )
+                    })
+                }
+            </ScrollView>
         </View>
     )
 }

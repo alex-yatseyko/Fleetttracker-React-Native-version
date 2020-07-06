@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     StyleSheet,
     View,
@@ -37,9 +37,9 @@ import {
 
   // import { rootReducer } from '../redux/rootReducer'
   import { authReducer } from '../redux/authReducer'
+  import { AppContext } from '../context/AppContext'
 
   const axios = require('axios');
-
   // import BackendApiClient from '../services/api/BackendApiClient';
 
   type LatLngObject = { lat: number; lng: number };
@@ -53,9 +53,9 @@ import {
   const icon = `<svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="40" height="40"><defs><path d="M320.8 7.2L501.6 640L140 640L320.8 7.2Z" id="b1OuTbAhqc"></path></defs><g><g><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill="#fefe02" fill-opacity="1"></use><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="14" stroke-opacity="1"></use></g></g></g></g></svg>`
   const scale = .6;
 
-const getDuration = (): number => Math.floor(Math.random() * 3) + 1;
-const getDelay = (): number => Math.floor(Math.random()) * 0.5;
-const iterationCount = "infinite";
+// const getDuration = (): number => Math.floor(Math.random() * 3) + 1;
+// const getDelay = (): number => Math.floor(Math.random()) * 0.5;
+// const iterationCount = "infinite";
 
 
 export const MapScreen = ({navigation}) => {
@@ -77,17 +77,6 @@ export const MapScreen = ({navigation}) => {
           component={ShipScreen}
           options={{ 
             headerShown: false,
-            // title: 'Ship Title',
-            // headerBackTitleStyle: { 
-            //   color: 'white' 
-            // },
-            // headerRight: () => (
-            //     <TouchableWithoutFeedback
-            //     onPress={() => alert('Focus ship on the map')}
-            //     >
-            //       <Icon name="crosshairs" style={styles.headerIcon} />
-            //     </TouchableWithoutFeedback>
-            // ), 
           }}
         />
         <Stack.Screen 
@@ -143,8 +132,10 @@ export const MapScreen = ({navigation}) => {
         switch (message.event) {
           case WebViewLeafletEvents.ON_MAP_MARKER_CLICKED:
             // Alert.alert(
-              console.log(message.event)
-              console.log(message)
+
+              // console.log(message.event)
+              // console.log(message)
+              
               // `Map Marker Touched, ID: ${message.payload.mapMarkerID || "unknown"}`
               navigation.navigate('Ship', {
                 data: message.payload.mapMarkerID,
@@ -179,11 +170,12 @@ export const MapScreen = ({navigation}) => {
       // const onIncrement={() => store.dispatch({ type: 'INCREMENT' })}
 
       const { error, request } = useHttp()
-      
+      const conte = useContext(AppContext)
+
       const getMapData = async () => {
         const token = await AsyncStorage.getItem('Token')
         try {
-          const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
+          const fetched: Object = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
             Authorization: `Bearer ${token}`
           })
           
@@ -218,9 +210,7 @@ export const MapScreen = ({navigation}) => {
           // console.log(data)
 
           for(let i = 0; i < fetchedShipIds.length; i++) {
-              // console.log(fetchedShipIds[i])
               const _id = fetchedShipIds[i]
-              // console.log(_id)
               let fetchedDetails = await request(`https://staging.api.app.fleettracker.de/api/ships/${_id}/latest_position`, 'GET', null, {
                 Authorization: `Bearer ${token}`
               })
@@ -231,7 +221,6 @@ export const MapScreen = ({navigation}) => {
 
               // console.log(data[i])
               if(data[i]["id"] === _id) {
-                // data[i]["icon"] = fetchedDetails.cmg
                 
                 data[i]["icon"] = 
                 `<div style="margin-top: -20px;">
@@ -241,178 +230,36 @@ export const MapScreen = ({navigation}) => {
                 </div>`
                 data[i]["position"] = { lat: fetchedDetails.posy / 60000, lng: fetchedDetails.posx / 60000 }
                 
-                // console.log(data[i])
-                // data[i]["position"] = { lat: parseFloat(fetchedDetails.posy / 60000), lng: 24.026591 }
               }
           }
           
-          // console.log('TestData', data)
+          conte.loadShips(fetched)
+      
           if(data) {
             setLocations(data)
-            // console.log(data)
-            // console.log(data)
           }
-
-          // console.log(fetched['hydra:member'][1]['name']) // Test if name works
-         
-          // if(fetched) {
-          //   const newObject = [
-          //     {
-          //       "name": fetched['hydra:member'][1]['name'],
-          //       "icon": '',
-          //       "position": '',
-          //     }
-          //   ]
-          //   console.log(newObject)
-          // }
-          // fetched ? console.log (fetched['hydra:member']) : null
+      
         } catch(e) {
           console.log(e)
         }
       }
 
-      const getMapDataOld = async () => {
-        const token = await AsyncStorage.getItem('Token')
-        // console.log('Url', Config.apiUrl)
-        try {
-          // console.log('token', token)
-          const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
-            Authorization: `Bearer ${token}`
-          })
-          console.log('Test', fetched)
-
-          // Createing arrays for saving data
-          const fetchedShipIds = []
-          const fetchedScheduleIds = []
-          
-          /* Function for getting IDs */
-          const getIds = (item) => {
-            const idKey = item['@id'].slice(11, 15)
-            const scheduleIdKey = item['schedules'][0]['@id'].slice(15, 19)
-            fetchedShipIds.push(idKey)
-            fetchedScheduleIds.push(scheduleIdKey)
-          }
     
-          // Loop for getting ids
-          fetched['hydra:member'].forEach(getIds)
-          
-          console.log('Works')
-          
-          // Request for all the details
-          for(let i = 0; i < fetchedShipIds.length; i++) {
-            // console.log(i)
-            const _id = fetchedShipIds[i]
-            let fetchedCapt = await request(`https://staging.api.app.fleettracker.de/api/ships/${_id}/latest_position`, 'GET', null, {
-                Authorization: `Bearer ${token}`
-            })
-            if(fetchedCapt == null) {
-              //   console.log(_id)
-              fetchedCapt = ''
-            }
-            // Adding to the main Fetched details
-            fetched['hydra:member'][i]['latest_position'] = fetchedCapt
-          }
-
-
-          let fetchedFuture = []
-          for(let j = 0; j < fetchedScheduleIds.length; j++) {
-              const _id = fetchedScheduleIds[j]
-              try{
-                  let fetchedSchedule = await request(`https://staging.api.app.fleettracker.de/api/future_schedule_entries?schedule_id=${_id}`, 'GET', null, {
-                      Authorization: `Bearer ${token}`
-                  })
-                  if(fetchedSchedule === undefined) {
-                      console.log('Test')
-                  }
-                  if(fetchedSchedule['hydra:member'].length === 1){
-                      fetchedSchedule = {
-                          'hydra:member': [
-                              { etd: fetchedSchedule['hydra:member'][0]['eta'], foid: fetchedSchedule['hydra:member'][0]['foid']},
-                              { eta: 'No data', etd: 'No data' },
-                              { eta: 'No data', etd: 'No data' }
-                          ]
-                      }
-                  }
-                  if(fetchedSchedule['hydra:member'].length === 2){                         
-                      fetchedSchedule = {
-                          'hydra:member': [
-                              { etd: fetchedSchedule['hydra:member'][0]['eta'], foid: fetchedSchedule['hydra:member'][0]['foid']},
-                              { etd: fetchedSchedule['hydra:member'][1]['eta'], foid: fetchedSchedule['hydra:member'][1]['foid']},
-                              { eta: 'No data', etd: 'No data' }
-                          ]
-                      }
-                  }
-                  if(fetchedSchedule['hydra:totalItems'] === 0) {
-                      fetchedSchedule = {
-                          'hydra:member': [
-                              { eta: 'No data', etd: 'No data' },
-                              { eta: 'No data', etd: 'No data' },
-                              { eta: 'No data', etd: 'No data' }
-                          ]
-                      }
-                  }
-
-                  if(fetchedSchedule['hydra:member'][0]['foid']) {
-                      let obj1 = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fetchedSchedule['hydra:member'][0]['foid']}`, 'GET', null, {
-                          Authorization: `Bearer ${token}`
-                      })
-                      fetchedSchedule['hydra:member'][0]['countrycode'] = obj1['countrycode']
-                      fetchedSchedule['hydra:member'][0]['unlocationcode'] = obj1['unlocationcode']
-                  }
-                  if(fetchedSchedule['hydra:member'][1]['foid']) {
-                      let obj1 = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fetchedSchedule['hydra:member'][1]['foid']}`, 'GET', null, {
-                          Authorization: `Bearer ${token}`
-                      })
-                      fetchedSchedule['hydra:member'][1]['countrycode'] = obj1['countrycode']
-                      fetchedSchedule['hydra:member'][1]['unlocationcode'] = obj1['unlocationcode']
-                  }
-                  if(fetchedSchedule['hydra:member'][2]['foid']) {
-                      let obj1 = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${fetchedSchedule['hydra:member'][2]['foid']}`, 'GET', null, {
-                          Authorization: `Bearer ${token}`
-                      })
-                      fetchedSchedule['hydra:member'][2]['countrycode'] = obj1['countrycode']
-                      fetchedSchedule['hydra:member'][2]['unlocationcode'] = obj1['unlocationcode']
-                  }
-
-                  fetchedFuture.push(fetchedSchedule)
-                  
-              } catch(e) {
-                  const fetchedSchedule = {
-                      'hydra:member': [
-                          { eta: 'No data', etd: 'No data' },
-                          { eta: 'No data', etd: 'No data' },
-                          { eta: 'No data', etd: 'No data' },
-                      ]
-                  }
-                  fetchedFuture.push(fetchedSchedule)
-
-                  const test = JSON.stringify(fetched['hydra:member'])
-
-                  AsyncStorage.setItem('Ships', test)
-                  AsyncStorage.setItem('ShipsIds', JSON.stringify(fetchedShipIds))
-                  AsyncStorage.setItem('ScheduleIds', JSON.stringify(fetchedScheduleIds))
-
-                  setLocations(fetched['hydra:member'])
-                  setFilteredLocations(fetched['hydra:member'])
-              }
-          }
-
-          for(let k = 0; k < fetched['hydra:member'].length; k++) {
-            fetched['hydra:member'][k]['future'] = fetchedFuture[k]
-          }         
-        } catch(e) {
-          console.log(e)
-        }
-      }
 
       useEffect(() => {
         console.log(AsyncStorage.getItem('currentLocation'))
         // setMapCenterPosition()
         getMapData()
+       
       }, [])
+
+      // const auth = useContext(AuthContext)
+      
+      // const testdata = 'test'
 
       return (
           <View style={{ height: '100%' }}>
+              
               <TouchableHighlight
                 style={styles.refresh}
                 onPress={() => {
@@ -423,6 +270,7 @@ export const MapScreen = ({navigation}) => {
                 <Icon name='refresh' style={styles.refreshIcon} />
               </TouchableHighlight>
               <View style={styles.header}>
+                  {/* <Text>{conte.lang}</Text> */}
                   <TextInput 
                     style={styles.headerInput}
                     textContentType="name"
@@ -430,7 +278,10 @@ export const MapScreen = ({navigation}) => {
                     onChange={ onFilterList }
                   />
                   <TouchableWithoutFeedback
-                    onPress={() => {navigation.navigate('List')}}
+                    onPress={() => {
+                      navigation.navigate('List')
+                      // conte.loadShips(testdata)
+                    }}
                   >
                     <View style={styles.headerButtonWrapper}>
                       <Icon name='bars' style={styles.headerButton} />

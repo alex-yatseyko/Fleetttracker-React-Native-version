@@ -9,6 +9,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 // import AsyncStorage from '@react-native-community/async-storage';
 
+import { AppContext } from './context/AppContext'
+import { useAppContext } from './services/utility/AppContext.hook'
+
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
@@ -35,32 +38,22 @@ const store = createStore(rootReducer)
 const Stack = createStackNavigator();
 
 export default function App() {
-  // const {
-  //   token, 
-  //   refresh_token, 
-  //   login, 
-  //   logout, 
-  //   // ready 
-  // } = useAuth()
-  // const isAuthenticated = !!token  
-
-  // const isAuthenticated = false;
-  // const routes = useRoutes(isAuthenticated)
-
-  // const storeData = async (value) => {
-  //   try {
-  //     await AsyncStorage.setItem('@storage_Key', value)
-  //   } catch (e) {
-  //     // saving error
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   storeData('Token')
-  // })
+  const {
+    lang,
+    ships, 
+    loadShips
+  } = useAppContext()
 
   return (
-    <Provider store={store}>
+    // <Provider store={store}>
+
+    // <AppContext.Provider>
+    <AppContext.Provider value={{ 
+      lang: 'fr',
+      ships,
+      loadShips,
+    }}>
+
     {/* <AuthContext.Provider value={{
       token, login, logout, refresh_token, isAuthenticated
     }}> */}
@@ -148,7 +141,10 @@ export default function App() {
         </View>
       </NavigationContainer>
     {/* </AuthContext.Provider> */}
-    </Provider>
+
+    {/* </Provider> */}
+  
+    </AppContext.Provider>
   );
 }
 
