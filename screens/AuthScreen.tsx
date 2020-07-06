@@ -7,6 +7,7 @@ import {
     Image,
     AsyncStorage,
     Keyboard,
+    TouchableOpacity,
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useHttp } from '../services/utility/http.hook'
@@ -42,9 +43,6 @@ export const AuthScreen = ({navigation}) => {
     const loginHandler = async () => {
         try {
             const data = await request('https://staging.api.app.fleettracker.de/api/token', 'POST', {'name': login, 'password': pass}, {'Content-Type': 'application/json'})
-            // console.log('Token: ', data.token)
-            // console.log('RefreshToken', data.refresh_token)
-            // auth.login(data.token, data.refresh_token)
             AsyncStorage.setItem('Token', data.token)
             AsyncStorage.setItem('Name', login)
             AsyncStorage.setItem('Password', pass)
@@ -99,7 +97,7 @@ export const AuthScreen = ({navigation}) => {
                         secureTextEntry={true}
                     />
                 </View>
-                <TouchableWithoutFeedback
+                <TouchableOpacity
                     onPress={loginHandler}
                     // onPress={() => navigation.navigate('Bottom')}
                 >
@@ -108,7 +106,7 @@ export const AuthScreen = ({navigation}) => {
                             Login
                         </Text>
                     </View>
-                </TouchableWithoutFeedback>
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -121,9 +119,6 @@ const styles = StyleSheet.create({
         padding: 20
       },
     logo: {
-        // alignItems: 'center',
-        // width: 200,
-        // marginTop: 60,
         alignItems: 'center',
         width: 200,
         height: 120,

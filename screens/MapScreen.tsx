@@ -215,8 +215,6 @@ export const MapScreen = ({navigation}) => {
               if(fetchedDetails == null) {
                 fetchedDetails = ''
               }
-
-              // console.log(data[i])
               if(data[i]["id"] === _id) {
                 
                 data[i]["icon"] = 
@@ -304,8 +302,6 @@ export const MapScreen = ({navigation}) => {
                         fetchedSchedule['hydra:member'][2]['unlocationcode'] = obj1['unlocationcode']
                     }
 
-                    // console.log(fetchedSchedule)
-
                     fetchedFuture.push(fetchedSchedule)
                     
                 } catch(e) {
@@ -320,12 +316,7 @@ export const MapScreen = ({navigation}) => {
                 }
             }
 
-            // console.log('Future test', fetchedFuture)
-            // console.log(fetchedFuture)
             context.loadSchedules(fetchedFuture)
-            console.log(context.schedules)
-            // console.log(context.loadSchedules)
-
           } catch(e) {
             console.log(e)
           }

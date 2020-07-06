@@ -15,12 +15,9 @@ import { useAppContext } from './services/utility/AppContext.hook'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-// import { useAuth } from './services/auth/auth.hook'
-// import { AuthContext } from './context/AuthContext'
-
 import { BottomTab } from './navigation/BottomTab'
 
-import NavigationService from './services/utility/NavigationService';
+// import NavigationService from './services/utility/NavigationService';
 
 import { AuthScreen } from './screens/AuthScreen'
 import { ShipScreen } from './screens/ShipScreen'
@@ -29,7 +26,7 @@ import { ScheduleScreen } from './screens/ScheduleScreen'
 import { SettingsScreen } from './screens/SettingsScreen'
 
 import { createStore } from 'redux'
-import { Provider } from 'react-redux'
+// import { Provider } from 'react-redux'
 import { rootReducer } from './redux/rootReducer'
 
 console.disableYellowBox = true;
@@ -106,19 +103,6 @@ export default function App() {
             component={ShipScreen}
             options={{ 
               headerShown: false,
-              // title: 'Ship Title',
-              // headerBackTitleStyle: { 
-              //   color: 'white' 
-              // },
-              // headerRight: () => (
-              //   // <View style={{ transform: [{ scaleX: "-1" }] }}>
-              //     <TouchableWithoutFeedback
-              //       onPress={() => alert('Focus ship on the map')}
-              //     >
-              //       <Icon name="crosshairs" style={styles.headerIcon} />
-              //     </TouchableWithoutFeedback>
-              //   // </View>
-              // ), 
             }}
           /> 
           {/* <Stack.Screen
@@ -138,10 +122,6 @@ export default function App() {
           </Stack.Navigator>
         </View>
       </NavigationContainer>
-    {/* </AuthContext.Provider> */}
-
-    {/* </Provider> */}
-  
     </AppContext.Provider>
   );
 }
