@@ -167,8 +167,6 @@ export const MapScreen = ({navigation}) => {
       ]
       const hereTileUrl = `https://1.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${themes[0]}/{z}/{x}/{y}/256/png8?apiKey=${ hereCredentials.apiKey }&app_id=${ hereCredentials.appId }`
 
-      // const onIncrement={() => store.dispatch({ type: 'INCREMENT' })}
-
       const { error, request } = useHttp()
       const context = useContext(AppContext)
 
@@ -215,6 +213,11 @@ export const MapScreen = ({navigation}) => {
               if(fetchedDetails == null) {
                 fetchedDetails = ''
               }
+              // console.log(i, fetched)
+
+              fetched['hydra:member'][i]['latest_position'] = fetchedDetails
+
+
               if(data[i]["id"] === _id) {
                 
                 data[i]["icon"] = 
@@ -224,9 +227,9 @@ export const MapScreen = ({navigation}) => {
                 }background: transparent;">${data[i]["title"]}</div>
                 </div>`
                 data[i]["position"] = { lat: fetchedDetails.posy / 60000, lng: fetchedDetails.posx / 60000 }
-                
               }
           }
+          console.log(fetched)
           context.loadShips(fetched)
 
           if(data) {

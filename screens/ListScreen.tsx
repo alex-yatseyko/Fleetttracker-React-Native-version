@@ -25,173 +25,7 @@ export const ListScreen = ({navigation}) => {
     const [ list2, setList2 ] = useState([])
 
     const context = useContext(AppContext)
-
-const list = [
-    {
-        name: 'MV TURTOISE 1',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE 2',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE 3',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE 4',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE 5',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE 6',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE 7',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE 8',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-    {
-        name: 'MV TURTOISE 9',
-        capt: 'Capt A.Kirk',
-        futureEntries: {
-            0: {
-                date: '12.08',
-                name: 'DE HAM'
-            },
-            1: {
-                date: '20.08',
-                name: 'GB LGB'
-            },
-            2: {
-                date: '27.08',
-                name: 'MA MOH'
-            },
-        }
-    },
-]
-
-
+    
     const onFilterList = (e) => {
 
     }
@@ -210,7 +44,6 @@ const list = [
                 context.ships["hydra:member"][k]['future'] = context.schedules[k]
                 localList.push(context.ships["hydra:member"][k])
                 // console.log(context.ships["hydra:member"][k])
-                // console.log()
             }
             setList2(localList)
             console.log('LIST', localList)
@@ -241,11 +74,12 @@ const list = [
                                 key={schedule.name}
                             >
                             <View style={styles.listItem} key={schedule.name}>
-                                <View style={styles.scheduleName}>
-                                    <Text>{schedule.name}</Text>
+                                <View style={styles.scheduleNameWrapper}>
+                                    <Text style={styles.scheduleName}>{schedule.name}</Text>
                                     <Text>{schedule.capt}</Text>
+                                                                         {/* <p>{ship.latest_position.captname ? `Capt. ${ ship.latest_position.captname }` : 'No Captain Data'}</p> */}
                                 </View>
-                                {console.log(schedule["future"]["hydra:member"])}
+                                {/* {console.log(schedule)} */}
 
                                 {schedule["future"]["hydra:member"] ?
                                 <View style={styles.scheduleFuture}>
@@ -331,8 +165,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 25,
     },
+    scheduleNameWrapper: {
+        justifyContent: 'center',
+    },
     scheduleName: {
-        justifyContent: 'center'
+        justifyContent: 'center',
+        fontWeight: '700',
     },
     scheduleFuture: {
         flexDirection: 'row'
@@ -352,9 +190,7 @@ const styles = StyleSheet.create({
         width: 200,
         height: 1,
         position: 'absolute',
-        // top: 23,
         top: Platform.OS === Globals.platform.os.ios ? 21 : 23,
-
     },
     centerText:{
         textAlign: 'center',
