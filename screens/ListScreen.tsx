@@ -21,11 +21,10 @@ import { AppContext } from '../context/AppContext'
 export const ListScreen = ({navigation}) => {
     const [ search, setSearch ] = useState([])
     const [ filteredList, setFilteredList ] = useState([])
-    // const [ list, setList ] = useState([])
-    const [ list2, setList2 ] = useState([])
+    const [ list, setList ] = useState([])
 
     const context = useContext(AppContext)
-    
+
     const onFilterList = (e) => {
 
     }
@@ -43,9 +42,9 @@ export const ListScreen = ({navigation}) => {
             for(let k = 0; k < context.ships["hydra:member"].length; k++) {
                 context.ships["hydra:member"][k]['future'] = context.schedules[k]
                 localList.push(context.ships["hydra:member"][k])
-                // console.log(context.ships["hydra:member"][k])
             }
-            setList2(localList)
+            setFilteredList(localList)
+            setList(localList)
             console.log('LIST', localList)
 
         } catch(e) {
@@ -66,53 +65,49 @@ export const ListScreen = ({navigation}) => {
                 />
             </View>
             <ScrollView style={styles.scrollSpace}>
-                {
-                    list2.map(schedule => {
+                {filteredList.map(schedule => {
                         return (
                             <TouchableWithoutFeedback
                                 onPress={() => {navigation.navigate('Ship')}}
                                 key={schedule.name}
                             >
-                            <View style={styles.listItem} key={schedule.name}>
-                                <View style={styles.scheduleNameWrapper}>
-                                    <Text style={styles.scheduleName}>{schedule.name}</Text>
-                                    <Text>{schedule.capt}</Text>
-                                                                         {/* <p>{ship.latest_position.captname ? `Capt. ${ ship.latest_position.captname }` : 'No Captain Data'}</p> */}
-                                </View>
-                                {/* {console.log(schedule)} */}
-
-                                {schedule["future"]["hydra:member"] ?
-                                <View style={styles.scheduleFuture}>
-                                    <View style={styles.scheduleFutureItem}>
-                                            {schedule['future']['hydra:member'][0]['etd'] === 'No data' ? 
-                                                <Text style={styles.centerText}>No data</Text> : 
-                                                <Text style={styles.centerText}>{`${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getDate() > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getDate() : `0${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getDate()}`}.${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getMonth() + 1 > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getMonth() + 1 : `0${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getMonth() + 1} `}`}</Text>
-                                            }
-                                        <View style={styles.circle} />
-                                        <Text style={styles.centerBlueText}>{schedule['future']['hydra:member'][0]['countrycode'] ? `${schedule['future']['hydra:member'][0]['countrycode']} ` : ''} 
-                                                    {schedule['future']['hydra:member'][0]['unlocationcode'] ? schedule['future']['hydra:member'][0]['unlocationcode'] : ''} </Text>
+                                <View style={styles.listItem} key={schedule.name}>
+                                    <View style={styles.scheduleNameWrapper}>
+                                        <Text style={styles.scheduleName}>{schedule.name}</Text>
+                                        <Text>{schedule.latest_position.captname ? `Capt. ${ ship.latest_position.captname }` : 'No Captain Data'}</Text>
                                     </View>
-                                    <View style={styles.scheduleFutureItem}>
-                                        {schedule['future']['hydra:member'][1]['etd'] === 'No data' ? 
-                                                <Text style={styles.centerText}>No data</Text> : 
-                                                <Text style={styles.centerText}>{`${new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getDate() > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getDate() : `0${new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getDate()}`}.${new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getMonth() + 1 > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getMonth() + 1 : `0${new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getMonth() + 1} `}`}</Text>
-                                            }
-                                        <View style={styles.circle} />
-                                        <Text style={styles.centerBlueText}>{schedule['future']['hydra:member'][1]['countrycode'] ? `${schedule['future']['hydra:member'][1]['countrycode']} ` : ''} 
-                                                    {schedule['future']['hydra:member'][1]['unlocationcode'] ? schedule['future']['hydra:member'][1]['unlocationcode'] : ''} </Text>
-                                    </View>
-                                    <View style={styles.scheduleFutureItem}>
-                                        {schedule['future']['hydra:member'][2]['etd'] === 'No data' ? 
-                                                <Text style={styles.centerText}>No data</Text> : 
-                                                <Text style={styles.centerText}>{`${new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getDate() > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getDate() : `0${new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getDate()}`}.${new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getMonth() + 1 > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getMonth() + 1 : `0${new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getMonth() + 1} `}`}</Text>
-                                            }
-                                        <View style={styles.circle} />
-                                        <Text style={styles.centerBlueText}>{schedule['future']['hydra:member'][2]['countrycode'] ? `${schedule['future']['hydra:member'][2]['countrycode']} ` : ''} 
-                                                    {schedule['future']['hydra:member'][2]['unlocationcode'] ? schedule['future']['hydra:member'][2]['unlocationcode'] : ''} </Text>
-                                    </View>
-                                    <View style={styles.line} />
-                                </View> : null }
-                            </View> 
+                                    {schedule["future"]["hydra:member"] ?
+                                    <View style={styles.scheduleFuture}>
+                                        <View style={styles.scheduleFutureItem}>
+                                                {schedule['future']['hydra:member'][0]['etd'] === 'No data' ? 
+                                                    <Text style={styles.centerText}>No data</Text> : 
+                                                    <Text style={styles.centerText}>{`${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getDate() > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getDate() : `0${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getDate()}`}.${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getMonth() + 1 > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getMonth() + 1 : `0${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getMonth() + 1} `}`}</Text>
+                                                }
+                                            <View style={styles.circle} />
+                                            <Text style={styles.centerBlueText}>{schedule['future']['hydra:member'][0]['countrycode'] ? `${schedule['future']['hydra:member'][0]['countrycode']} ` : ''} 
+                                                        {schedule['future']['hydra:member'][0]['unlocationcode'] ? schedule['future']['hydra:member'][0]['unlocationcode'] : ''} </Text>
+                                        </View>
+                                        <View style={styles.scheduleFutureItem}>
+                                            {schedule['future']['hydra:member'][1]['etd'] === 'No data' ? 
+                                                    <Text style={styles.centerText}>No data</Text> : 
+                                                    <Text style={styles.centerText}>{`${new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getDate() > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getDate() : `0${new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getDate()}`}.${new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getMonth() + 1 > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getMonth() + 1 : `0${new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getMonth() + 1} `}`}</Text>
+                                                }
+                                            <View style={styles.circle} />
+                                            <Text style={styles.centerBlueText}>{schedule['future']['hydra:member'][1]['countrycode'] ? `${schedule['future']['hydra:member'][1]['countrycode']} ` : ''} 
+                                                        {schedule['future']['hydra:member'][1]['unlocationcode'] ? schedule['future']['hydra:member'][1]['unlocationcode'] : ''} </Text>
+                                        </View>
+                                        <View style={styles.scheduleFutureItem}>
+                                            {schedule['future']['hydra:member'][2]['etd'] === 'No data' ? 
+                                                    <Text style={styles.centerText}>No data</Text> : 
+                                                    <Text style={styles.centerText}>{`${new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getDate() > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getDate() : `0${new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getDate()}`}.${new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getMonth() + 1 > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getMonth() + 1 : `0${new Date(Date.parse(schedule['future']['hydra:member'][2]['etd'])).getMonth() + 1} `}`}</Text>
+                                                }
+                                            <View style={styles.circle} />
+                                            <Text style={styles.centerBlueText}>{schedule['future']['hydra:member'][2]['countrycode'] ? `${schedule['future']['hydra:member'][2]['countrycode']} ` : ''} 
+                                                        {schedule['future']['hydra:member'][2]['unlocationcode'] ? schedule['future']['hydra:member'][2]['unlocationcode'] : ''} </Text>
+                                        </View>
+                                        <View style={styles.line} />
+                                    </View> : null }
+                                </View> 
                             </TouchableWithoutFeedback> 
                         )
                     })
