@@ -163,9 +163,12 @@ export const MapScreen = ({navigation}) => {
       const onFilterList = (e) => {
         console.log('List is Filtered')
         let updatedList = locations.filter((i) => {
-          return i.name.toLowerCase().search(
-            e.toLowerCase()) !== -1;
-        })
+          // console.log(e.nativeEvent.text)
+          // console.log(i.title)
+          return i.title.toLowerCase().search(
+            e.nativeEvent.text.toLowerCase()) !== -1;
+          })
+        // })
         if(updatedList.length > 0) {
           setNotFound(false)
           // console.log(e)
@@ -175,8 +178,6 @@ export const MapScreen = ({navigation}) => {
         }
         setFilteredLocations(updatedList)
       }
-
-
 
       const getMapData = async () => {
         setLoading(true)
