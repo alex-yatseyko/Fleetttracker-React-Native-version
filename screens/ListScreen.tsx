@@ -19,7 +19,7 @@ import { ScheduleScreen } from './ScheduleScreen'
 import { AppContext } from '../context/AppContext'
 
 export const ListScreen = ({navigation}) => {
-    const [ notFound, setNotFound ] = useState([])
+    const [ notFound, setNotFound ] = useState(false)
     const [ filteredList, setFilteredList ] = useState([])
     const [ list, setList ] = useState([])
 
@@ -79,11 +79,23 @@ export const ListScreen = ({navigation}) => {
                 />
             </View>
             <ScrollView style={styles.scrollSpace}>
-                {
-                    notFound ?
-                    <Text>Not Found</Text>
-                    : null
-                }
+                {notFound ?
+                    <View 
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            height: 275,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                fontWeight: '700',
+                                fontSize: 17
+                            }}
+                        >Not Found</Text>
+                    </View>
+                : null}
                 {filteredList.map(schedule => {
                         return (
                             <TouchableWithoutFeedback
