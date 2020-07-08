@@ -7,6 +7,7 @@ import {
     Alert,
     AsyncStorage,
     TouchableHighlight,
+    ActivityIndicator,
 } from 'react-native';
 import {
     INFINITE_ANIMATION_ITERATIONS,
@@ -124,7 +125,7 @@ export const MapScreen = ({navigation}) => {
       }])
       const [filteredLocations, setFilteredLocations] = useState()
       
-      const [loading, setLoading] = useState()
+      const [loading, setLoading] = useState(true)
 
       const img = require('../assets/logo.png')
 
@@ -171,12 +172,12 @@ export const MapScreen = ({navigation}) => {
       const context = useContext(AppContext)
 
       const getMapData = async () => {
+        setLoading(true)
         const token = await AsyncStorage.getItem('Token')
         try {
           const fetched: Object = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
             Authorization: `Bearer ${token}`
           })
-          
 
           // Createing arrays to store data
           const fetchedShipIds = []
@@ -213,7 +214,6 @@ export const MapScreen = ({navigation}) => {
               if(fetchedDetails == null) {
                 fetchedDetails = ''
               }
-              // console.log(i, fetched)
 
               fetched['hydra:member'][i]['latest_position'] = fetchedDetails
 
@@ -235,7 +235,8 @@ export const MapScreen = ({navigation}) => {
           if(data) {
             setLocations(data)
           }
-      
+
+          setLoading(false)
         } catch(e) {
           console.log(e)
         }
@@ -324,28 +325,25 @@ export const MapScreen = ({navigation}) => {
             console.log(e)
           }
         }
-        // scheduleIds ? 
-        // console.log('works') 
-
-        // : null
- 
       }
 
       useEffect(() => {
         // console.log('Location', AsyncStorage.getItem('currentLocation'))
         // setMapCenterPosition()
         getMapData()
-        // getListData()
-
-        // setTimeout(() => {
-        //   getListData()
-        // }, 10000)
       }, [])
 
       useEffect(() => {
-        // console.log('test')
         getListData()
       }, [scheduleIds])
+
+      if (loading) {
+        return (
+          <View style={styles.loader}> 
+            <ActivityIndicator size="large" color={Globals.color.main} />
+          </View>
+        )
+      }
 
       return (
           <View style={{ height: '100%' }}>
@@ -445,6 +443,10 @@ export const MapScreen = ({navigation}) => {
       fontSize: 22,
       paddingVertical: 7,
       paddingHorizontal: 10,
+    },
+    loader: {
+      flex: 1,
+      justifyContent: "center"
     },
     refresh: {
       position: 'absolute',
