@@ -113,18 +113,27 @@ export const MapScreen = ({navigation}) => {
       const [search, setSearch ] = useState([])
       const [ownPosition, setOwnPosition] = useState(null);
       const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
+      
       const [scheduleIds, setScheduleIds] = useState()
-
-      const [locations, setLocations] = useState([{
-        icon: ``,
-        position: { lat: 49.841140, lng: 24.026591 },
-        name: "Lviv",
-      }])
-      const [filteredLocations, setFilteredLocations] = useState()
+      
+      const [ notFound, setNotFound ] = useState(false)
+      const [locations, setLocations] = useState([])
+      const [filteredLocations, setFilteredLocations] = useState([])
       
       const [loading, setLoading] = useState(true)
 
       const img = require('../assets/logo.png')
+      const hereCredentials = {
+        appId: 'T94boxXXrApFtc58WmGz',
+        apiKey: 'aJYTveJijLx5bMV5Qt4-pXKHvbH9CblzqBiq3dRZRDA'
+      }
+      const themes = [
+        'normal.day',
+        'reduced.night'
+      ]
+      const hereTileUrl = `https://1.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${themes[0]}/{z}/{x}/{y}/256/png8?apiKey=${ hereCredentials.apiKey }&app_id=${ hereCredentials.appId }`
+      const { error, request } = useHttp()
+      const context = useContext(AppContext)
 
     const onMessageReceived = (message: WebviewLeafletMessage) => {
         switch (message.event) {
@@ -151,22 +160,23 @@ export const MapScreen = ({navigation}) => {
         }
       };
 
-      const onFilterList = () => {
+      const onFilterList = (e) => {
         console.log('List is Filtered')
+        let updatedList = locations.filter((i) => {
+          return i.name.toLowerCase().search(
+            e.toLowerCase()) !== -1;
+        })
+        if(updatedList.length > 0) {
+          setNotFound(false)
+          // console.log(e)
+        } else {
+            // console.log('Not found')
+            setNotFound(true)
+        }
+        setFilteredLocations(updatedList)
       }
 
-      const hereCredentials = {
-        appId: 'T94boxXXrApFtc58WmGz',
-        apiKey: 'aJYTveJijLx5bMV5Qt4-pXKHvbH9CblzqBiq3dRZRDA'
-      }
-      const themes = [
-        'normal.day',
-        'reduced.night'
-      ]
-      const hereTileUrl = `https://1.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${themes[0]}/{z}/{x}/{y}/256/png8?apiKey=${ hereCredentials.apiKey }&app_id=${ hereCredentials.appId }`
 
-      const { error, request } = useHttp()
-      const context = useContext(AppContext)
 
       const getMapData = async () => {
         setLoading(true)
@@ -231,6 +241,7 @@ export const MapScreen = ({navigation}) => {
 
           if(data) {
             setLocations(data)
+            setFilteredLocations(data)
           }
 
         } catch(e) {
@@ -379,7 +390,7 @@ export const MapScreen = ({navigation}) => {
                 },
               ]}
               mapMarkers={[
-                  ...locations.map(location => {
+                  ...filteredLocations.map(location => {
                     return {
                       id: location.name.replace(" ", "-"),
                       position: location.position,
