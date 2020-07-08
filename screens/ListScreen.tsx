@@ -19,14 +19,27 @@ import { ScheduleScreen } from './ScheduleScreen'
 import { AppContext } from '../context/AppContext'
 
 export const ListScreen = ({navigation}) => {
-    const [ search, setSearch ] = useState([])
+    const [ notFound, setNotFound ] = useState([])
     const [ filteredList, setFilteredList ] = useState([])
     const [ list, setList ] = useState([])
 
     const context = useContext(AppContext)
 
     const onFilterList = (e) => {
-
+        // setSearch(e.target.value)
+        let updatedList = list.filter((i) => {
+            return i.name.toLowerCase().search(
+              e.toLowerCase()) !== -1;
+        })
+        console.log(updatedList.length)
+        if(updatedList.length > 0) {
+            setNotFound(false)
+            console.log(e)
+        } else {
+            console.log('Not found')
+            setNotFound(true)
+        }
+        setFilteredList(updatedList)
     }
 
     const getListData = async () => {
@@ -62,9 +75,15 @@ export const ListScreen = ({navigation}) => {
                 <TextInput 
                     style={styles.headerInput}
                     placeholder="Search Vessel or Ship Group..." 
+                    onChangeText={onFilterList}
                 />
             </View>
             <ScrollView style={styles.scrollSpace}>
+                {
+                    notFound ?
+                    <Text>Not Found</Text>
+                    : null
+                }
                 {filteredList.map(schedule => {
                         return (
                             <TouchableWithoutFeedback
