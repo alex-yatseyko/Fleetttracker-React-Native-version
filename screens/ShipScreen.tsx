@@ -3,11 +3,10 @@ import {
     StyleSheet,
     View,
     Text,
-    TextInput,
-    Image,
     AsyncStorage,
     ScrollView,
     Dimensions,
+    ActivityIndicator,
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useHttp } from '../services/utility/http.hook'
@@ -21,10 +20,13 @@ export const ShipScreen = ({route, navigation}) => {
     const [ future, setFuture ] = useState([])
     const [ location, setLocation ] = useState()
     const [ idSchedule, setIdSchedule ] = useState()
+    
+    const [ loading, setLoading ] = useState(true)
 
     const { request } = useHttp()
     const { data } = route.params;
     const getShip = async () => {
+        setLoading(true)
         const token = await AsyncStorage.getItem('Token')
         const shipId = data.slice(data.length - 4, data.length)
         try {
@@ -75,7 +77,9 @@ export const ShipScreen = ({route, navigation}) => {
             // console.log('Future Edited', fetchedFuture['hydra:member'])
 
             setFuture(fetchedFuture)
+            setLoading(false)
         } catch(e) {
+            setLoading(false)
             console.log(e)
         }
     }
@@ -84,17 +88,25 @@ export const ShipScreen = ({route, navigation}) => {
         getShip()
     }, [])
 
-    if(!future['hydra:member']) {
+
+    if (loading) {
         return (
-            <View>
-                <Text>Future Schedules Not Found for this ship</Text>
-            </View>
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" color={Globals.color.main} />
+          </View>
         )
     }
 
+    // if(!future['hydra:member']) {
+    //     return (
+    //         <View style={styles.notFound}>
+    //             <Text style={{paddingTop: 200}}>Future Schedules Not Found for this ship</Text>
+    //         </View>
+    //     )
+    // }
+
     return(
         <View style={styles.container}>
- 
             <View style={styles.header}>
                 <TouchableWithoutFeedback
                     onPress={() => navigation.goBack()}
@@ -113,7 +125,25 @@ export const ShipScreen = ({route, navigation}) => {
                     <Icon name="crosshairs" style={styles.rightIcon} />
                 </TouchableWithoutFeedback>
             </View>
+            {!future['hydra:member'] ? () => {
+                return(
+                    <ScrollView style={styles.scrollView}>
+                        <View style={styles.notFound}>
+                            <Text style={{paddingTop: 0}}>Future Schedules Not Found for this ship</Text>
+                        </View>
+                    </ScrollView>  
+                )
+            } :
                 <ScrollView style={styles.scrollView}>
+                    {/* {!future['hydra:member'] ? () => {
+                        return(
+                            <View style={styles.notFound}>
+                                <Text style={{paddingTop: 200}}>Future Schedules Not Found for this ship</Text>
+                            </View>
+                        )
+                    }
+                    : null
+                    } */}
                     {(future['hydra:member'].length > 0) ? future['hydra:member'].map(i => {
                         return(
                             <View key={i['@id']} style={styles.detailsSchedule}>
@@ -160,8 +190,11 @@ export const ShipScreen = ({route, navigation}) => {
                                 </TouchableWithoutFeedback>
                             </View>
                         )})
-                    : <View style={styles.notFound}><Text>Future Schedules Not Found for this ship</Text></View>}
+                    : <View style={styles.notFound}>
+                        <Text>Future Schedules Not Found for this ship</Text>
+                    </View>}
                 </ScrollView>
+            }
         </View>
     )
 }
@@ -212,9 +245,15 @@ const styles = StyleSheet.create({
     scrollView: {
         paddingTop: 40,
     },
+    loader: {
+        flex: 1,
+        justifyContent: "center",
+    },
     notFound: {
+        height: Dimensions.get('window').height * 0.6,
         width: Dimensions.get('window').width,
         alignItems: 'center',
+        justifyContent: 'center'
     },
     scheduleWrapper: {
         flexDirection: 'row',

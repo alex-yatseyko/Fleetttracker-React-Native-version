@@ -105,20 +105,6 @@ export default function App() {
               headerShown: false,
             }}
           /> 
-          {/* <Stack.Screen
-            name="Ship" 
-            component={ShipScreen}
-            options={({ 
-              route, 
-            }) => ({ 
-              // title: route.params.params.user, 
-              headerBackTitle: null,
-            })}
-          />  */}
-          {/* <AuthScreen /> */}
-          {/* <View style={styles.bottomTabNavigation}>
-            <BottomTab/>
-          </View> */}
           </Stack.Navigator>
         </View>
       </NavigationContainer>

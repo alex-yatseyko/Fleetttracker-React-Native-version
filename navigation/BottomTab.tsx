@@ -7,7 +7,7 @@ import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 /* Screens */
 import { MapScreen } from '../screens/MapScreen'
-import { ListScreen } from '../screens/ListScreen'
+import { ListNavigation } from '../screens/ListNavigation'
 import { SettingsScreen } from '../screens/SettingsScreen'
 
 export const BottomTab = ({navigation}) => {
@@ -40,7 +40,7 @@ export const BottomTab = ({navigation}) => {
           />
           <Tab.Screen 
             name="List" 
-            component={ ListScreen } 
+            component={ ListNavigation } 
             options={{
               tabBarLabel: '',
               tabBarIcon: () => (

@@ -36,9 +36,6 @@ import {
   import Globals from '../component-library/Globals';
   import Config from "react-native-config";
 
-  // import { rootReducer } from '../redux/rootReducer'
-  // import { authReducer } from '../redux/authReducer'
-
   import { AppContext } from '../context/AppContext'
 
   const axios = require('axios');
@@ -175,7 +172,7 @@ export const MapScreen = ({navigation}) => {
         setLoading(true)
         const token = await AsyncStorage.getItem('Token')
         try {
-          const fetched: Object = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
+          const fetched:any = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
             Authorization: `Bearer ${token}`
           })
 
@@ -186,20 +183,20 @@ export const MapScreen = ({navigation}) => {
           const data = []
                     
           // /* Function for getting IDs */
-                    const getIds = (item) => {
-                      const idKey = item['@id'].slice(11, 15)
-                      const scheduleIdKey = item['schedules'][0]['@id'].slice(15, 19)
-                      fetchedShipIds.push(idKey)
-                      fetchedScheduleIds.push(scheduleIdKey)
+          const getIds = (item) => {
+            const idKey = item['@id'].slice(11, 15)
+            const scheduleIdKey = item['schedules'][0]['@id'].slice(15, 19)
+            fetchedShipIds.push(idKey)
+            fetchedScheduleIds.push(scheduleIdKey)
 
-                      data.push({
-                        "id": idKey,
-                        "icon": '',
-                        "position": '',
-                        "title": item['name'],
-                        "name": `${item['name']}${idKey}`,
-                      })
-                    }
+            data.push({
+              "id": idKey,
+              "icon": '',
+              "position": '',
+              "title": item['name'],
+              "name": `${item['name']}${idKey}`,
+            })
+          }
               
                     // Loop for getting ids
                     fetched['hydra:member'].forEach(getIds)
@@ -339,7 +336,7 @@ export const MapScreen = ({navigation}) => {
 
       if (loading) {
         return (
-          <View style={styles.loader}> 
+          <View style={styles.loader}>
             <ActivityIndicator size="large" color={Globals.color.main} />
           </View>
         )
@@ -446,7 +443,7 @@ export const MapScreen = ({navigation}) => {
     },
     loader: {
       flex: 1,
-      justifyContent: "center"
+      justifyContent: "center",
     },
     refresh: {
       position: 'absolute',

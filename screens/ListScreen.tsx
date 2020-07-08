@@ -31,12 +31,12 @@ export const ListScreen = ({navigation}) => {
             return i.name.toLowerCase().search(
               e.toLowerCase()) !== -1;
         })
-        console.log(updatedList.length)
+        // console.log(updatedList.length)
         if(updatedList.length > 0) {
             setNotFound(false)
-            console.log(e)
+            // console.log(e)
         } else {
-            console.log('Not found')
+            // console.log('Not found')
             setNotFound(true)
         }
         setFilteredList(updatedList)
@@ -58,7 +58,7 @@ export const ListScreen = ({navigation}) => {
             }
             setFilteredList(localList)
             setList(localList)
-            console.log('LIST', localList)
+            // console.log('LIST', localList)
 
         } catch(e) {
             console.log(e)
@@ -79,7 +79,7 @@ export const ListScreen = ({navigation}) => {
                 />
             </View>
             <ScrollView style={styles.scrollSpace}>
-                {notFound ?
+                { notFound ?
                     <View 
                         style={{
                             flex: 1,
@@ -95,22 +95,28 @@ export const ListScreen = ({navigation}) => {
                             }}
                         >Not Found</Text>
                     </View>
-                : null}
+                : null }
                 {filteredList.map(schedule => {
                         return (
                             <TouchableWithoutFeedback
-                                onPress={() => {navigation.navigate('Ship')}}
+                                // onPress={() => {navigation.navigate('Ship')}}
+                                onPress={() => {
+                                    // navigation.navigate('Ship')}
+                                    navigation.navigate('Ship', {
+                                        data: `${schedule.name}${schedule['@id'].slice(11, 15)}`,
+                                    })
+                                }}
                                 key={schedule.name}
                             >
                                 <View style={styles.listItem} key={schedule.name}>
                                     <View style={styles.scheduleNameWrapper}>
                                         <Text style={styles.scheduleName}>{schedule.name}</Text>
-                                        <Text>{schedule.latest_position.captname ? `Capt. ${ ship.latest_position.captname }` : 'No Captain Data'}</Text>
+                                        <Text>{schedule.latest_position.captname ? `Capt. ${ schedule.latest_position.captname }` : 'No Captain Data'}</Text>
                                     </View>
                                     {schedule["future"]["hydra:member"] ?
                                     <View style={styles.scheduleFuture}>
                                         <View style={styles.scheduleFutureItem}>
-                                                {schedule['future']['hydra:member'][0]['etd'] === 'No data' ? 
+                                            {schedule['future']['hydra:member'][0]['etd'] === 'No data' ? 
                                                     <Text style={styles.centerText}>No data</Text> : 
                                                     <Text style={styles.centerText}>{`${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getDate() > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][1]['etd'])).getDate() : `0${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getDate()}`}.${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getMonth() + 1 > 9 ? new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getMonth() + 1 : `0${new Date(Date.parse(schedule['future']['hydra:member'][0]['etd'])).getMonth() + 1} `}`}</Text>
                                                 }
