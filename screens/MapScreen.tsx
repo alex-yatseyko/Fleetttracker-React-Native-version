@@ -198,10 +198,9 @@ export const MapScreen = ({navigation}) => {
             })
           }
               
-                    // Loop for getting ids
-                    fetched['hydra:member'].forEach(getIds)
-                    setScheduleIds(fetchedScheduleIds)
-
+          // Loop for getting ids
+          fetched['hydra:member'].forEach(getIds)
+          setScheduleIds(fetchedScheduleIds)
 
           for(let i = 0; i < fetchedShipIds.length; i++) {
               const _id = fetchedShipIds[i]
