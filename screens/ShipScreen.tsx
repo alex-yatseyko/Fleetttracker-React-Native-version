@@ -7,6 +7,7 @@ import {
     Image,
     AsyncStorage,
     ScrollView,
+    Dimensions,
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useHttp } from '../services/utility/http.hook'
@@ -125,7 +126,6 @@ export const ShipScreen = ({route, navigation}) => {
                                     <View style={styles.detailsPlace}>
                                         <Text style={styles.placeText}>{i['countrycode']} {i['unlocationcode']}</Text>
                                         <Text style={styles.mainText}>
-                                        {/* {"\n"} */}
                                             <Text style={styles.boldText}>{i['name']},{"\n"} </Text> 
                                             <Text style={styles.detailsCountry}>{countries[`${i['countrycode']}`]}</Text>
                                         </Text>
@@ -172,9 +172,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         paddingTop: 80,
-        // marginBottom: 0,
     },
-      header: {
+    header: {
         paddingTop: 20,
         // paddingBottom: 120,
         // marginTop: 20,
@@ -196,15 +195,15 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.23,
         shadowRadius: 2.62,
         elevation: 4,
-      },
-      rightIcon: {
+    },
+    rightIcon: {
         color: '#4A83B7',
         fontSize: 23,
-      },
-      leftIcon: {
+    },
+    leftIcon: {
         color: '#4A83B7',
         fontSize: 33,
-      },
+    },
     headerTitle: {
         fontWeight: '600',
         fontSize: 16,
@@ -212,27 +211,26 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         paddingTop: 40,
-        // paddingBottom: 300,
-        // marginBottom: 100,
     },
-      notFound: {
-
-      },
-      scheduleWrapper: {
+    notFound: {
+        width: Dimensions.get('window').width,
+        alignItems: 'center',
+    },
+    scheduleWrapper: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
-      },
-      detailsSchedule: {
+    },
+    detailsSchedule: {
         flexDirection: 'row',
-      },
-      detailsPlace: {
+    },
+    detailsPlace: {
         flexDirection: 'column',
         alignItems: 'flex-end',
         justifyContent: 'center',
         paddingRight: 15,
         width: '100%'
-      },
-      detailsDates: {
+    },
+    detailsDates: {
         textAlign: 'right',
         width: 145,
         minWidth: 130,
@@ -240,52 +238,50 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         flexDirection: 'column',
         justifyContent: 'space-around',
-      },
-      detailsTimeline: {
+    },
+    detailsTimeline: {
         alignItems: 'flex-end',
         justifyContent: 'center',
         flexDirection: 'column',
-        // marginHorizontal: 30
-      },
-      circle: {
+    },
+    circle: {
         backgroundColor: '#4A83B7',
         width: 7,
         height: 7,
         borderRadius: 25,
         position: 'absolute',
         left: -3,
-      },
-      scheduleLineDetails: {
+    },
+    scheduleLineDetails: {
         backgroundColor: '#4A83B7',
         width: 1,
         height: 160,
-      },
-      detailsCountry: {
+    },
+    detailsCountry: {
         textTransform: 'uppercase',
-      },
-      placeText: {
+    },
+    placeText: {
         color: '#707070'
-      },
-      activities: {
+    },
+    activities: {
         textAlign: 'right'
-      },
-      boldText: {
+    },
+    boldText: {
         fontWeight: '800',
         textAlign: 'right',
-      },
-      mainText: {
+    },
+    mainText: {
         color: '#4A83B7',
-      },
-      dateWrapper: {
+    },
+    dateWrapper: {
         flexDirection: 'row',
-      },
-      dateText: {
+    },
+    dateText: {
         color: '#707070',
         textAlign: 'right'
-      },
-      greyText: {
+    },
+    greyText: {
         color: '#BFBFBF',
-        // flexDirection: 'row',
         textAlign: 'right',
-      },
+    },
   });

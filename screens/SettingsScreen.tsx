@@ -5,35 +5,20 @@ import {
     Text,
     Image ,
     AsyncStorage,
+    Dimensions,
+    TouchableOpacity,
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
 
 import Globals from '../component-library/Globals';
-
-import { createStackNavigator } from '@react-navigation/stack';
-
-const Stack = createStackNavigator();
-
-// export const SettingsScreen = () => {
-//     return (
-//         <Stack.Navigator initialRouteName="Map">
-//             <Stack.Screen 
-//             name="Settings" 
-//             component={Settings} 
-//             options={{ 
-//                 // headerShown: false 
-//             }}
-//             />
-//         </Stack.Navigator>
-//     )
-// }
 
 export const SettingsScreen = ({navigation}) => {
     return (
         <View style={styles.settings}>
-            <View style={styles.header}>
+            {/* <View style={styles.header}>
                 <TouchableWithoutFeedback
                     onPress={() => navigation.goBack()}
                 >
@@ -41,9 +26,27 @@ export const SettingsScreen = ({navigation}) => {
                 </TouchableWithoutFeedback>
                 <Text style={styles.headerTitle}>SETTINGS</Text>
                 <Icon name="crosshairs" style={styles.headerHiddenIcon} />
+            </View> */}
+            <View style={styles.header}>
+                <TouchableWithoutFeedback
+                    onPress={() => navigation.goBack()}
+                >
+                    <Feather name="chevron-left" style={styles.leftIcon} />
+                </TouchableWithoutFeedback>
+                <Text style={styles.headerTitle}>SETTINGS</Text>
+                <TouchableWithoutFeedback
+                    style={{opacity: 0}}
+                    // onPress={() => navigation.navigate('Map',
+                    //     {
+                    //         current: location
+                    //     }
+                    // )}
+                >
+                    <Icon name="crosshairs" style={styles.rightIcon} />
+                </TouchableWithoutFeedback>
             </View>
             <Image style={styles.logo} source={require('../assets/logo.png')} />
-            <TouchableWithoutFeedback
+            <TouchableOpacity
                  onPress={() => {
                      console.log('Logout')
                      AsyncStorage.removeItem('Token');
@@ -56,7 +59,7 @@ export const SettingsScreen = ({navigation}) => {
                         Logout
                     </Text>
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -64,13 +67,15 @@ export const SettingsScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
     settings: {
+        paddingTop: Dimensions.get('window').height * 0.1,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         flex: 1,
-        // paddingTop: 200,
-        // padding: 20
-      },
+        backgroundColor: '#fff',
+    },
     header: {
+        paddingTop: 20,
+        zIndex: 99,
         backgroundColor: '#fff',
         position: 'absolute',
         width: '100%',
@@ -78,19 +83,29 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: 20,
-        paddingHorizontal: 10
+        paddingHorizontal: 20,
+        height: 80,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
     },
-    headerIcon: {
-        fontSize: 20,
-        paddingTop: 12,
+    rightIcon: {
         color: '#4A83B7',
+        fontSize: 23,
     },
-    headerHiddenIcon: {
-        opacity: 0
+    leftIcon: {
+        color: '#4A83B7',
+        fontSize: 33,
     },
     headerTitle: {
-        fontWeight: '700',
+        fontWeight: '600',
+        fontSize: 16,
+        color: '#333'
     },
     logo: {
         alignItems: 'center',
