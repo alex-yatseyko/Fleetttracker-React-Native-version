@@ -226,14 +226,14 @@ export const MapScreen = ({navigation}) => {
                 data[i]["position"] = { lat: fetchedDetails.posy / 60000, lng: fetchedDetails.posx / 60000 }
               }
           }
-          console.log(fetched)
+          setLoading(false)
+          // console.log(fetched)
           context.loadShips(fetched)
 
           if(data) {
             setLocations(data)
           }
 
-          setLoading(false)
         } catch(e) {
           console.log(e)
         }
@@ -251,7 +251,7 @@ export const MapScreen = ({navigation}) => {
                         Authorization: `Bearer ${token}`
                     })
                     if(fetchedSchedule === undefined) {
-                        console.log('Test')
+                        // console.log('Test')
                     }
                     if(fetchedSchedule['hydra:member'].length === 1){
                         fetchedSchedule = {
@@ -337,7 +337,7 @@ export const MapScreen = ({navigation}) => {
       if (loading) {
         return (
           <View style={styles.loader}>
-            <ActivityIndicator size="large" color={Globals.color.main} />
+            <ActivityIndicator size="small" color="#aaa" />
           </View>
         )
       }
@@ -444,6 +444,7 @@ export const MapScreen = ({navigation}) => {
     loader: {
       flex: 1,
       justifyContent: "center",
+      backgroundColor: '#fff'
     },
     refresh: {
       position: 'absolute',

@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   },
   activityIndicatorContainer: {
     backgroundColor: 'lightgray',
+    // backgroundColor: 'red',
     padding: 10,
     borderRadius: 50,
     alignSelf: 'center',

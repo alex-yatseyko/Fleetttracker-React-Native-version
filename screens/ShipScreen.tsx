@@ -22,6 +22,7 @@ export const ShipScreen = ({route, navigation}) => {
     const [ idSchedule, setIdSchedule ] = useState()
     
     const [ loading, setLoading ] = useState(true)
+    const [ badRequest, setBadRequest ] = useState(false)
 
     const { request } = useHttp()
     const { data } = route.params;
@@ -37,9 +38,10 @@ export const ShipScreen = ({route, navigation}) => {
                 Authorization: `Bearer ${token}`
             })
 
-            const shipLocation:any = [fetchedShipLatestPosition.posy / 60000, fetchedShipLatestPosition.posx / 60000]
-            setLocation(shipLocation)
-            AsyncStorage.setItem('currentLocation', JSON.stringify(shipLocation))
+            // const shipLocation:any = [fetchedShipLatestPosition.posy / 60000, fetchedShipLatestPosition.posx / 60000]
+            
+            // setLocation(shipLocation)
+            // AsyncStorage.setItem('currentLocation', JSON.stringify(shipLocation))
 
             const scheduleId = fetchedShip['schedules'][0]['@id'].slice(15, 19)
             setIdSchedule(scheduleId)
@@ -80,7 +82,10 @@ export const ShipScreen = ({route, navigation}) => {
             setLoading(false)
         } catch(e) {
             setLoading(false)
+            setBadRequest (true)
             console.log(e)
+            alert('Future Schedules Not Found for this ship')
+            navigation.goBack()
         }
     }
 
@@ -96,14 +101,6 @@ export const ShipScreen = ({route, navigation}) => {
           </View>
         )
     }
-
-    // if(!future['hydra:member']) {
-    //     return (
-    //         <View style={styles.notFound}>
-    //             <Text style={{paddingTop: 200}}>Future Schedules Not Found for this ship</Text>
-    //         </View>
-    //     )
-    // }
 
     return(
         <View style={styles.container}>
@@ -125,7 +122,10 @@ export const ShipScreen = ({route, navigation}) => {
                     <Icon name="crosshairs" style={styles.rightIcon} />
                 </TouchableWithoutFeedback>
             </View>
-            {!future['hydra:member'] ? () => {
+            {console.log('Test',future)}
+            {console.log('BAd', badRequest)}
+            
+            {!future['hydra:member'] || badRequest || !future ? () => {
                 return(
                     <ScrollView style={styles.scrollView}>
                         <View style={styles.notFound}>
@@ -193,6 +193,7 @@ export const ShipScreen = ({route, navigation}) => {
                     : <View style={styles.notFound}>
                         <Text>Future Schedules Not Found for this ship</Text>
                     </View>}
+                    <View style={{height: 100}}/>
                 </ScrollView>
             }
         </View>
@@ -205,8 +206,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         paddingTop: 80,
+        // paddingBottom: 80,
     },
     header: {
+        // display: 'none',
         paddingTop: 20,
         // paddingBottom: 120,
         // marginTop: 20,
