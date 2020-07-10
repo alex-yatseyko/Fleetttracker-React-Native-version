@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   StyleSheet, 
   Text, 
   View,
-  Button 
+  AsyncStorage
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -21,20 +21,18 @@ import { BottomTab } from './navigation/BottomTab'
 
 import { AuthScreen } from './screens/AuthScreen'
 import { ShipScreen } from './screens/ShipScreen'
-import { ListScreen } from './screens/ListScreen'
+// import { ListScreen } from './screens/ListScreen'
 import { ScheduleScreen } from './screens/ScheduleScreen'
-import { SettingsScreen } from './screens/SettingsScreen'
+// import { SettingsScreen } from './screens/SettingsScreen'
 
-import { createStore } from 'redux'
-// import { Provider } from 'react-redux'
-import { rootReducer } from './redux/rootReducer'
+// import { createStore } from 'redux'
 
 console.disableYellowBox = true;
 
-const store = createStore(rootReducer)
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [token, setToken] = useState()
   const {
     ships, 
     loadShips,
@@ -42,10 +40,17 @@ export default function App() {
     loadSchedules,
   } = useAppContext()
 
-  return (
-    // <Provider store={store}>
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem('Token')
+    console.log(token)
+    setToken(token)
+  }
 
-    // <AppContext.Provider>
+  useEffect(() => {
+    getToken()
+  }, [])
+
+  return (
     <AppContext.Provider value={{ 
       ships,
       loadShips,

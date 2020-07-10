@@ -161,20 +161,14 @@ export const MapScreen = ({navigation}) => {
       };
 
       const onFilterList = (e) => {
-        console.log('List is Filtered')
         let updatedList = locations.filter((i) => {
-          // console.log(e.nativeEvent.text)
-          // console.log(i.title)
           return i.title.toLowerCase().search(
             e.nativeEvent.text.toLowerCase()) !== -1;
-          })
-        // })
+        })
         if(updatedList.length > 0) {
           setNotFound(false)
-          // console.log(e)
         } else {
-            // console.log('Not found')
-            setNotFound(true)
+          setNotFound(true)
         }
         setFilteredLocations(updatedList)
       }
@@ -237,7 +231,6 @@ export const MapScreen = ({navigation}) => {
               }
           }
           setLoading(false)
-          // console.log(fetched)
           context.loadShips(fetched)
 
           if(data) {
