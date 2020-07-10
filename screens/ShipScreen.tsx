@@ -122,8 +122,8 @@ export const ShipScreen = ({route, navigation}) => {
                     <Icon name="crosshairs" style={styles.rightIcon} />
                 </TouchableWithoutFeedback>
             </View>
-            {console.log('Test',future)}
-            {console.log('BAd', badRequest)}
+            {/* {console.log('Test',future)}
+            {console.log('BAd', badRequest)} */}
             
             {!future['hydra:member'] || badRequest || !future ? () => {
                 return(

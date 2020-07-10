@@ -21,8 +21,6 @@ export const useAuth = () => {
     }, [])
 
     useEffect(() => {
-        // const data = JSON.parse(localStorage.getItem(storageName))
-
         const data = AsyncStorage.getItem('token')
 
         if ( data && data.token ) {

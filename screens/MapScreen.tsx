@@ -80,25 +80,7 @@ export const MapScreen = ({navigation}) => {
           name="Schedule" 
           component={ScheduleScreen}
           options={{ 
-            headerShown: false, 
-            title: 'Schedule Location',
-            headerBackTitle: '|',
-            headerBackTitleStyle: { 
-              color: 'white' 
-            },
-            headerRight: () => (
-              <TouchableWithoutFeedback
-               onPress={() => alert('Focus ship on the map')}
-              >
-                <Icon 
-                  name="reply"  
-                  style={[styles.headerIcon, {
-                    transform: [{ scaleX: -1 }],
-                    marginRight: 15
-                  }]}
-                />
-              </TouchableWithoutFeedback>
-            ), 
+            headerShown: false,
           }}
         />
       </Stack.Navigator>

@@ -9,6 +9,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { CommonActions } from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -19,6 +21,8 @@ import { AuthContext } from '../context/AuthContext';
 
 export const SettingsScreen = ({navigation}) => {
     const auth = useContext(AuthContext)
+
+    const pushAction = StackActions.push('Auth', { user: 'Wojtek' });
 
     return (
         <View style={styles.settings}>
@@ -38,16 +42,33 @@ export const SettingsScreen = ({navigation}) => {
             <Image style={styles.logo} source={require('../assets/logo.png')} />
             <TouchableOpacity
                  onPress={() => {
-                    //  console.log('Logout')
                     auth.logout()
                     AsyncStorage.removeItem('Token');
                     AsyncStorage.removeItem('Name');
                     AsyncStorage.removeItem('Password');
-                    navigation.navigate(
-                        navigation.navigate('Root', {
-                            screen: 'Settings',
-                        })
-                    )
+                    navigation.navigate('Auth')
+                    // navigation.navigate("Auth"
+                    //     // CommonActions.navigate({
+                    //     //   name: 'Auth',
+                    //     // //   params: {
+                    //     // //     user: 'jane',
+                    //     // //   },
+                    //     // })
+                    //     // CommonActions.reset({
+                    //     //     index: 1,
+                    //     //     routes: [
+                    //     //       { name: 'Auth' },
+                    //     //     //   {
+                    //     //     //     name: 'Profile',
+                    //     //     //     params: { user: 'jane' },
+                    //     //     //   },
+                    //     //     ],
+                    //     //   })
+                    //     // StackActions.replace('Auth', {
+                    //     //     user: 'jane',
+                    //     // })
+                    //     // pushAction
+                    //   );
                 }}
             >
                 <View style={styles.button}>

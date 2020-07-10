@@ -56,6 +56,7 @@ export default function App() {
     // getToken()
     console.log('Authenticated', isAuthenticated)
     console.log('Token', token)
+    console.log('!Token', !!token)
   }, [])
 
   return (
@@ -76,8 +77,8 @@ export default function App() {
                 headerShown: false,
               })}
             >
-              {
-              !isAuthenticated ?
+              {/* {
+              !isAuthenticated ? */}
               <Stack.Screen
                 name="Auth" 
                 component={AuthScreen}
@@ -85,8 +86,8 @@ export default function App() {
                   headerShown: false 
                 }}
               /> 
-              : null
-              }
+              {/* : null
+              } */}
               <Stack.Screen
                 name="Bottom" 
                 component={BottomTab}
@@ -94,7 +95,7 @@ export default function App() {
                   headerShown: false 
                 }}
               />
-              <Stack.Screen
+              {/* <Stack.Screen
                 name="Schedule" 
                 component={ScheduleScreen}
                 options={{ 
@@ -117,14 +118,14 @@ export default function App() {
                     </TouchableWithoutFeedback>
                   ), 
                 }}
-              /> 
-              <Stack.Screen
+              />  */}
+              {/* <Stack.Screen
                 name="Ship" 
                 component={ShipScreen}
                 options={{ 
                   headerShown: false,
                 }}
-              />
+              /> */}
             </Stack.Navigator>
           </View>
         </NavigationContainer>
