@@ -31,10 +31,6 @@ export const AuthScreen = ({navigation}) => {
         console.log('Errors: ', error ? error : 'No errors found')
     }, [error])
 
-    // useEffect(() => {
-        // window.M.updateTextFields()
-    // }, [])
-
     const changeLogin = (e) => {
         setLogin(e.nativeEvent.text)
     }
@@ -102,7 +98,6 @@ export const AuthScreen = ({navigation}) => {
                 </View>
                 <TouchableOpacity
                     onPress={loginHandler}
-                    // onPress={() => navigation.navigate('Bottom')}
                 >
                     <View style={styles.button}>
                         <Text style={styles.buttonText}>
