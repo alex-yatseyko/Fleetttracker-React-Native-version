@@ -16,21 +16,23 @@ import { AuthContext } from '../context/AuthContext'
 
 import Globals from '../component-library/Globals';
 
+
+
 export const AuthScreen = ({navigation}) => {
     const auth = useContext(AuthContext)
+
     const [openKeyboard, setOpenKeyboard] = useState(false)
-    const { loading, error, request } = useHttp()
+    const { error, request } = useHttp()
 
     const [login, setLogin] = useState()
     const [pass, setPass] = useState()
-
 
     useEffect(() => {
         console.log('Errors: ', error ? error : 'No errors found')
     }, [error])
 
     // useEffect(() => {
-    //     // window.M.updateTextFields()
+        // window.M.updateTextFields()
     // }, [])
 
     const changeLogin = (e) => {
@@ -46,6 +48,7 @@ export const AuthScreen = ({navigation}) => {
             AsyncStorage.setItem('Token', data.token)
             AsyncStorage.setItem('Name', login)
             AsyncStorage.setItem('Password', pass)
+            auth.login(data.token, data.refreshToken)
             navigation.navigate('Bottom')
         } catch (e) {
             alert('Name or Password is incorrect')

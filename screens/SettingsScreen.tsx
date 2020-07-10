@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { 
     StyleSheet,
     View,
@@ -15,18 +15,13 @@ import Feather from 'react-native-vector-icons/Feather';
 
 import Globals from '../component-library/Globals';
 
+import { AuthContext } from '../context/AuthContext';
+
 export const SettingsScreen = ({navigation}) => {
+    const auth = useContext(AuthContext)
+
     return (
         <View style={styles.settings}>
-            {/* <View style={styles.header}>
-                <TouchableWithoutFeedback
-                    onPress={() => navigation.goBack()}
-                >
-                    <Icon name="chevron-left" style={styles.headerIcon} />
-                </TouchableWithoutFeedback>
-                <Text style={styles.headerTitle}>SETTINGS</Text>
-                <Icon name="crosshairs" style={styles.headerHiddenIcon} />
-            </View> */}
             <View style={styles.header}>
                 <TouchableWithoutFeedback
                     onPress={() => navigation.goBack()}
@@ -36,11 +31,6 @@ export const SettingsScreen = ({navigation}) => {
                 <Text style={styles.headerTitle}>SETTINGS</Text>
                 <TouchableWithoutFeedback
                     style={{opacity: 0}}
-                    // onPress={() => navigation.navigate('Map',
-                    //     {
-                    //         current: location
-                    //     }
-                    // )}
                 >
                     <Icon name="crosshairs" style={styles.rightIcon} />
                 </TouchableWithoutFeedback>
@@ -48,10 +38,16 @@ export const SettingsScreen = ({navigation}) => {
             <Image style={styles.logo} source={require('../assets/logo.png')} />
             <TouchableOpacity
                  onPress={() => {
-                     console.log('Logout')
-                     AsyncStorage.removeItem('Token');
-                     AsyncStorage.removeItem('Name');
-                     AsyncStorage.removeItem('Password');
+                    //  console.log('Logout')
+                    auth.logout()
+                    AsyncStorage.removeItem('Token');
+                    AsyncStorage.removeItem('Name');
+                    AsyncStorage.removeItem('Password');
+                    navigation.navigate(
+                        navigation.navigate('Root', {
+                            screen: 'Settings',
+                        })
+                    )
                 }}
             >
                 <View style={styles.button}>

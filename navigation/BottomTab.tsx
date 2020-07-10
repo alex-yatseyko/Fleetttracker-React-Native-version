@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text } from 'react-native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-// import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 
@@ -64,7 +63,7 @@ export const BottomTab = ({navigation}) => {
 
 const styles = StyleSheet.create({
     icon: {  
-        color: '#A1A1A1',
-        fontSize: 25,
+      color: '#A1A1A1',
+      fontSize: 25,
     },
 })
