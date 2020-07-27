@@ -9,7 +9,6 @@ import { AuthScreen } from '../screens/AuthScreen'
 const Stack = createStackNavigator();
 
 export const Routes = (props) => {
-
     return(
         <Stack.Navigator>
             {!props.auth ? (

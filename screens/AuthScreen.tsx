@@ -16,7 +16,7 @@ import { AuthContext } from '../context/AuthContext'
 
 import Globals from '../component-library/Globals';
 
-
+const axios = require('axios');
 
 export const AuthScreen = ({navigation}) => {
     const auth = useContext(AuthContext)
@@ -40,15 +40,33 @@ export const AuthScreen = ({navigation}) => {
 
     const loginHandler = async () => {
         try {
-            const data = await request('https://staging.api.app.fleettracker.de/api/token', 'POST', {'name': login, 'password': pass}, {'Content-Type': 'application/json'})
-            AsyncStorage.setItem('Token', data.token)
-            AsyncStorage.setItem('Name', login)
-            AsyncStorage.setItem('Password', pass)
-            auth.login(data.token, data.refreshToken)
-            navigation.navigate('Bottom')
+            // const data = await request(
+            //     'https://staging.api.app.fleettracker.de/api/token', 
+            //     'POST', 
+            //     {'name': login, 'password': pass}, 
+            //     {'Content-Type': 'application/json'}
+            // )
+            const data = await axios.post(
+                'https://staging.api.app.fleettracker.de/api/token', 
+                {'name': login, 'password': pass},
+                {
+                  headers: {'Content-Type': 'application/json'},
+                }
+            )
+            // console.log(auth)
+            // AsyncStorage.setItem(data.data.token)
+            console.log('Token', data.data.token)
+
+            auth.login(data.data.token)
+
+            // auth.login(data.data.token
+                // , data.refreshToken, login, pass
+            // )
+            
+            // navigation.navigate('Bottom')
         } catch (e) {
             alert('Name or Password is incorrect')
-            // console.log( 'Authentification:', e ? e : true )
+            console.log( 'Authentification:', e ? e : true )
         }
     }
 
@@ -81,7 +99,7 @@ export const AuthScreen = ({navigation}) => {
             <View>
                 <View style={[styles.authForm, 
                     !openKeyboard ? {justifyContent: 'space-around'} : {justifyContent: 'space-around', paddingTop: 115}]}>
-                    <TextInput 
+                    <TextInput
                         placeholder="Name"
                         textContentType="username"
                         style={styles.authField}

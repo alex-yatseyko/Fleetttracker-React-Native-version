@@ -1,7 +1,7 @@
 import { createContext } from 'react'
 import { AsyncStorage } from 'react-native';
 
-const token = AsyncStorage.getItem('Token');
+const token = AsyncStorage.getItem('token');
 function noop() {}
 
 export const AuthContext = createContext({

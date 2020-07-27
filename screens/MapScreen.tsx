@@ -2,28 +2,18 @@ import React, { useState, useEffect, useContext } from 'react';
 import {
     StyleSheet,
     View,
-    Text,
     TextInput,
-    Alert,
     AsyncStorage,
     TouchableHighlight,
     ActivityIndicator,
 } from 'react-native';
 import {
-    INFINITE_ANIMATION_ITERATIONS,
-    LatLng,
     WebViewLeaflet,
     WebViewLeafletEvents,
     WebviewLeafletMessage,
-    AnimationType,
-    MapShapeType
   } from "../services/utility/react-native-webview-leaflet/index";
 
-  import Svg, {
-    Use,
-    Image,
-  } from 'react-native-svg';
-  import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native-gesture-handler';
+  import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
   import Icon from 'react-native-vector-icons/FontAwesome';
   import { useHttp } from '../services/utility/http.hook'
 
@@ -33,27 +23,20 @@ import {
 
   import { createStackNavigator } from '@react-navigation/stack';
 
+  import { AuthContext } from '../context/AuthContext';
+
   import Globals from '../component-library/Globals';
   import Config from "react-native-config";
 
   import { AppContext } from '../context/AppContext'
 
   const axios = require('axios');
-  // import BackendApiClient from '../services/api/BackendApiClient';
 
   type LatLngObject = { lat: number; lng: number };
-  
-  // Basic Logic: get IDs from api/ships and context (don't forget about second page)
-  // Get the positions from api/ships/{id}/latest_postition
 
   const Stack = createStackNavigator();
   // const icon = `<svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="40" height="40"><defs><path d="M320.8 7.2L501.6 640L140 640L320.8 7.2Z" id="b1OuTbAhqc"></path></defs><g><g><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill="#fefe02" fill-opacity="1"></use><g><use xlink:href="#b1OuTbAhqc" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="14" stroke-opacity="1"></use></g></g></g></g></svg>`
   const scale = .6;
-
-// const getDuration = (): number => Math.floor(Math.random() * 3) + 1;
-// const getDelay = (): number => Math.floor(Math.random()) * 0.5;
-// const iterationCount = "infinite";
-
 
 export const MapScreen = ({navigation}) => {
   return(
@@ -88,6 +71,7 @@ export const MapScreen = ({navigation}) => {
 }
 
   const Map = ({navigation}) => {
+    const auth = React.useContext(AuthContext)
     const [mapCenterPosition, setMapCenterPosition] = useState({
         lat: 40.153238,
         lng: 12.986282
@@ -95,6 +79,8 @@ export const MapScreen = ({navigation}) => {
       const [search, setSearch ] = useState([])
       const [ownPosition, setOwnPosition] = useState(null);
       const [webViewLeafletRef, setWebViewLeafletRef] = useState(null);
+      
+      const [token, setToken] = useState()
       
       const [scheduleIds, setScheduleIds] = useState()
       
@@ -120,25 +106,10 @@ export const MapScreen = ({navigation}) => {
     const onMessageReceived = (message: WebviewLeafletMessage) => {
         switch (message.event) {
           case WebViewLeafletEvents.ON_MAP_MARKER_CLICKED:
-            // Alert.alert(
-
-              // console.log(message.event)
-              // console.log(message)
-              
-              // `Map Marker Touched, ID: ${message.payload.mapMarkerID || "unknown"}`
               navigation.navigate('Ship', {
                 data: message.payload.mapMarkerID,
               })
-            // );
-    
-        //     break;
-        //   case WebViewLeafletEvents.ON_MAP_TOUCHED:
-        //     const position: LatLngObject = message.payload
-        //       .touchLatLng as LatLngObject;
-        //     Alert.alert(`Map Touched at:`, `${position.lat}, ${position.lng}`);
-        //     break;
           default:
-            // console.log("App received", message);
         }
       };
 
@@ -157,13 +128,15 @@ export const MapScreen = ({navigation}) => {
 
       const getMapData = async () => {
         setLoading(true)
-        const token = await AsyncStorage.getItem('Token')
+        // const token = await AsyncStorage.getItem('token')
+        const token = auth.token
+        console.log('Mapt', token)
         try {
           const fetched:any = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
             Authorization: `Bearer ${token}`
           })
 
-          // Createing arrays to store data
+          // Creating arrays to store data
           const fetchedShipIds = []
           const fetchedScheduleIds = []
 
@@ -226,7 +199,8 @@ export const MapScreen = ({navigation}) => {
       }
 
       const getListData = async () => {
-        const token = await AsyncStorage.getItem('Token')
+        const token = auth.token
+        // const token = await AsyncStorage.getItem('token')
         if(scheduleIds) {
           try { 
             let fetchedFuture = []
@@ -311,9 +285,11 @@ export const MapScreen = ({navigation}) => {
       }
 
       useEffect(() => {
+        // const token = await AsyncStorage.getItem('token')
         // console.log('Location', AsyncStorage.getItem('currentLocation'))
         // setMapCenterPosition()
         getMapData()
+        // setLoading(false)
       }, [])
 
       useEffect(() => {

@@ -95,7 +95,6 @@ export default function App(props) {
 
 
   React.useEffect(() => {
-    console.log('Token', token)
     async function loadResourcesAndDataAsync() {
       try {
         console.log('Token', token)
@@ -105,9 +104,8 @@ export default function App(props) {
 
         // Load our initial navigation state
         // setInitialNavigationState(await getInitialState());
-
+        
       } catch (e) {
-        // We might want to provide this error information to an error reporting service
         console.warn(e);
       } finally {
         setLoadingComplete(true);

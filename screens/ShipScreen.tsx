@@ -13,8 +13,9 @@ import { useHttp } from '../services/utility/http.hook'
 import Globals from '../component-library/Globals';
 import countries from '../assets/data/countryCodeISO.json'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
+
+import { AuthContext } from '../context/AuthContext'
 
 export const ShipScreen = ({route, navigation}) => {
     const [ future, setFuture ] = useState([])
@@ -26,12 +27,13 @@ export const ShipScreen = ({route, navigation}) => {
     const [ badRequest, setBadRequest ] = useState(false)
 
 
-
+    const auth = useContext(AuthContext)
     const { request } = useHttp()
     const { data } = route.params;
     const getShip = async () => {
         setLoading(true)
-        const token = await AsyncStorage.getItem('Token')
+        const token = auth.token
+        // const token = await AsyncStorage.getItem('Token')
         const shipId = data.slice(data.length - 4, data.length)
         try {
             const fetchedShip = await request(`https://staging.api.app.fleettracker.de/api/ships/${shipId}`, 'GET', null, {
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
         paddingTop: 80,
     },
     header: {
-        paddingTop: 20,
+        paddingTop: 25,
         zIndex: 99,
         backgroundColor: '#fff',
         position: 'absolute',
@@ -221,7 +223,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 20,
-        height: 80,
+        height: 100,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

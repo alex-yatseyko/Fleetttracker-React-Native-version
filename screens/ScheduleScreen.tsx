@@ -13,6 +13,8 @@ import { useHttp } from '../services/utility/http.hook'
 
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
+import { AuthContext } from '../context/AuthContext'
+
 import Globals from '../component-library/Globals';
 
 export const ScheduleScreen = ({route, navigation}) => {
@@ -37,8 +39,10 @@ export const ScheduleScreen = ({route, navigation}) => {
         }
       };
 
+    const auth = useContext(AuthContext)
     const getSchedule = useCallback( async () => {
-        const token = await AsyncStorage.getItem('Token')
+        // const token = await AsyncStorage.getItem('token')
+        const token = auth.token
         const scheduleId = JSON.parse(route.params.scheduleId)
         try {
             const fetchedSchedule = await request(`https://staging.api.app.fleettracker.de/api/schedule_entries/${scheduleId}`, 'GET', null, {
@@ -150,7 +154,7 @@ const styles = StyleSheet.create({
         // paddingLeft: 40
       },
       header: {
-        paddingTop: 20,
+        paddingTop: 25,
         zIndex: 99,
         backgroundColor: '#fff',
         position: 'absolute',
@@ -160,7 +164,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 20,
-        height: 80,
+        height: 100,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

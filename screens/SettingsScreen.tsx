@@ -38,7 +38,7 @@ export const SettingsScreen = ({navigation}) => {
                 <TouchableWithoutFeedback
                     style={{opacity: 0}}
                 >
-                    <Icon name="crosshairs" style={styles.rightIcon} />
+                    <Feather name="chevron-left" style={styles.leftIcon} />
                 </TouchableWithoutFeedback>
             </View>
             <Image style={styles.logo} source={require('../assets/logo.png')} />
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     header: {
-        paddingTop: 20,
+        paddingTop: 25,
         zIndex: 99,
         backgroundColor: '#fff',
         position: 'absolute',
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 20,
-        height: 80,
+        height: 100,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
