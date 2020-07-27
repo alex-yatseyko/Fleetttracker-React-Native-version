@@ -26,12 +26,10 @@ export const ListScreen = ({navigation}) => {
     const context = useContext(AppContext)
 
     const onFilterList = (e) => {
-        // setSearch(e.target.value)
         let updatedList = list.filter((i) => {
             return i.name.toLowerCase().search(
               e.toLowerCase()) !== -1;
         })
-        // console.log(updatedList.length)
         if(updatedList.length > 0) {
             setNotFound(false)
             // console.log(e)
@@ -44,13 +42,6 @@ export const ListScreen = ({navigation}) => {
 
     const getListData = async () => {
         try {
-            // console.log('ShipsOnList', context.ships["hydra:member"][1]["name"])
-            // console.log('ShipsOnList', context.ships)
-            // console.log('Schedules', context.schedules)
-
-            // console.log(context.ships["hydra:member"].length)
-            // console.log(context.schedules.length)
-
             let localList = []
             for(let k = 0; k < context.ships["hydra:member"].length; k++) {
                 context.ships["hydra:member"][k]['future'] = context.schedules[k]

@@ -22,7 +22,9 @@ import { AuthContext } from '../context/AuthContext';
 export const SettingsScreen = ({navigation}) => {
     const auth = useContext(AuthContext)
 
-    const pushAction = StackActions.push('Auth', { user: 'Wojtek' });
+    const logoutHandler = async () => {
+        auth.logout()
+    }
 
     return (
         <View style={styles.settings}>
@@ -42,33 +44,12 @@ export const SettingsScreen = ({navigation}) => {
             <Image style={styles.logo} source={require('../assets/logo.png')} />
             <TouchableOpacity
                  onPress={() => {
-                    auth.logout()
-                    AsyncStorage.removeItem('Token');
-                    AsyncStorage.removeItem('Name');
-                    AsyncStorage.removeItem('Password');
-                    navigation.navigate('Auth')
-                    // navigation.navigate("Auth"
-                    //     // CommonActions.navigate({
-                    //     //   name: 'Auth',
-                    //     // //   params: {
-                    //     // //     user: 'jane',
-                    //     // //   },
-                    //     // })
-                    //     // CommonActions.reset({
-                    //     //     index: 1,
-                    //     //     routes: [
-                    //     //       { name: 'Auth' },
-                    //     //     //   {
-                    //     //     //     name: 'Profile',
-                    //     //     //     params: { user: 'jane' },
-                    //     //     //   },
-                    //     //     ],
-                    //     //   })
-                    //     // StackActions.replace('Auth', {
-                    //     //     user: 'jane',
-                    //     // })
-                    //     // pushAction
-                    //   );
+                    logoutHandler()
+                    // auth.logout()
+                    // AsyncStorage.removeItem('Token');
+                    // AsyncStorage.removeItem('Name');
+                    // AsyncStorage.removeItem('Password');
+                    // navigation.navigate('Auth')
                 }}
             >
                 <View style={styles.button}>

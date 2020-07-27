@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect } from 'react'
 // import AsyncStorage from '@react-native-community/async-storage';
 // import SyncStorage from 'sync-storage';
+
+import { StyleSheet, View, AsyncStorage } from 'react-native';
  
 const storageName = 'userData'
 
@@ -9,9 +11,13 @@ export const useAuth = () => {
     const [refreshToken, setRefreshToken] = useState(null)
     const [ready, setReady] = useState()
 
-    const login = useCallback((jwtToken, jwtRefreshToken) => {
+    const login = useCallback((jwtToken, jwtRefreshToken, login, pass) => {
         setToken(jwtToken)
         setRefreshToken(jwtRefreshToken)
+
+        AsyncStorage.setItem('Token', jwtToken)
+        AsyncStorage.setItem('Name', login)
+        AsyncStorage.setItem('Password', pass)
 
         // SyncStorage.set('Token', jwtToken);
 
@@ -28,6 +34,10 @@ export const useAuth = () => {
     const logout = useCallback(() => {
         setToken( null )
         setRefreshToken( null )
+
+        AsyncStorage.removeItem('Token');
+        AsyncStorage.removeItem('Name');
+        AsyncStorage.removeItem('Password');
         // localStorage.removeItem( storageName )
     }, [])
 

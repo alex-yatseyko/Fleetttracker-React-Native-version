@@ -22,7 +22,10 @@ export const ShipScreen = ({route, navigation}) => {
     const [ idSchedule, setIdSchedule ] = useState()
     
     const [ loading, setLoading ] = useState(true)
+    const [ loaded, setLoaded ] = useState(false)
     const [ badRequest, setBadRequest ] = useState(false)
+
+
 
     const { request } = useHttp()
     const { data } = route.params;
@@ -37,11 +40,6 @@ export const ShipScreen = ({route, navigation}) => {
             const fetchedShipLatestPosition = await request(`https://staging.api.app.fleettracker.de/api/ships/${shipId}/latest_position`, 'GET', null, {
                 Authorization: `Bearer ${token}`
             })
-
-            // const shipLocation:any = [fetchedShipLatestPosition.posy / 60000, fetchedShipLatestPosition.posx / 60000]
-            
-            // setLocation(shipLocation)
-            // AsyncStorage.setItem('currentLocation', JSON.stringify(shipLocation))
 
             const scheduleId = fetchedShip['schedules'][0]['@id'].slice(15, 19)
             setIdSchedule(scheduleId)
@@ -75,17 +73,16 @@ export const ShipScreen = ({route, navigation}) => {
                 fetchedFuture['hydra:member'][i]['countrycode'] = fetchedFixedObj.countrycode
                 fetchedFuture['hydra:member'][i]['name'] = fetchedFixedObj.name
             }
-            
-            // console.log('Future Edited', fetchedFuture['hydra:member'])
-
             setFuture(fetchedFuture)
             setLoading(false)
+            setLoaded(true)
         } catch(e) {
             setLoading(false)
             setBadRequest (true)
-            console.log(e)
-            alert('Future Schedules Not Found for this ship')
-            navigation.goBack()
+            // console.log(e)
+            console.log('check bad', badRequest)
+            // alert('Future Schedules Not Found for this ship')
+            // navigation.goBack()
         }
     }
 
@@ -93,12 +90,11 @@ export const ShipScreen = ({route, navigation}) => {
         getShip()
     }, [])
 
-
-    if (loading) {
-        return (
-          <View style={styles.loader}>
-            <ActivityIndicator size="large" color={Globals.color.main} />
-          </View>
+    if(!loaded) {
+        return(
+            <View style={styles.notFound}>
+                <Text>Future Schedules Not Found for this ship</Text>
+            </View>
         )
     }
 
@@ -113,18 +109,25 @@ export const ShipScreen = ({route, navigation}) => {
                 <Text style={styles.headerTitle}>{data.slice(0, -4)}</Text>
                 <TouchableWithoutFeedback
                     style={{opacity: 0}}
-                    // onPress={() => navigation.navigate('Map',
-                    //     {
-                    //         current: location
-                    //     }
-                    // )}
                 >
                     <Icon name="crosshairs" style={styles.rightIcon} />
                 </TouchableWithoutFeedback>
             </View>
-            {/* {console.log('Test',future)}
-            {console.log('BAd', badRequest)} */}
-            
+
+            {/* {if (loading) {
+        return (
+            <View style={styles.loader}>
+                <ActivityIndicator size="large" color={Globals.color.main} />
+            </View>
+        )
+    }} */}
+            {loading ? () => {
+                        return (
+                            <View style={styles.loader}>
+                                <ActivityIndicator size="large" color={Globals.color.main} />
+                            </View>
+                        )
+            } : null}
             {!future['hydra:member'] || badRequest || !future ? () => {
                 return(
                     <ScrollView style={styles.scrollView}>
@@ -206,13 +209,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         paddingTop: 80,
-        // paddingBottom: 80,
     },
     header: {
-        // display: 'none',
         paddingTop: 20,
-        // paddingBottom: 120,
-        // marginTop: 20,
         zIndex: 99,
         backgroundColor: '#fff',
         position: 'absolute',
@@ -303,10 +302,10 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
     },
     placeText: {
-        color: '#707070'
+        color: '#707070',
     },
     activities: {
-        textAlign: 'right'
+        textAlign: 'right',
     },
     boldText: {
         fontWeight: '800',
